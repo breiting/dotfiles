@@ -5,3 +5,4 @@ stow lazygit
 stow zsh
 stow tmux
 stow nvim
+stow git
