@@ -4,5 +4,5 @@ This repository contains all my dotfiles. Feel free to clone and adapt to your n
 I use `stow` in order to set the proper symbolic links.
 
 ```
-stow .
+./update.sh
 ```
