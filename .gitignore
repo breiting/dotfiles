@@ -2,3 +2,4 @@
 tmux/.config/tmux/plugins/
 lazygit/.config/lazygit/state.yml
 zsh/.config/zsh/.zcompdump
+nvim/.config/nvim/lazy-lock.json
