@@ -19,5 +19,13 @@ vim.opt.cursorline = true
 
 -- Global Keymaps
 vim.keymap.set("n", "<Esc>", function()
-    vim.cmd('nohlsearch')
+  vim.cmd('nohlsearch')
 end, { desc = "Clear search highlights", silent = true })
+
+-- Background transparent
+vim.cmd [[
+  highlight Normal guibg=none
+  highlight NonText guibg=none
+  highlight Normal ctermbg=none
+  highlight NonText ctermbg=none
+]]
