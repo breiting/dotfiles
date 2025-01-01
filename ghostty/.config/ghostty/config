@@ -9,9 +9,17 @@ font-family = JetBrainsMonoNL Nerd Font
 font-size = 16
 
 macos-titlebar-style = hidden
+quit-after-last-window-closed = true
+confirm-close-surface = false
+
+quick-terminal-position = center
+quick-terminal-screen = mouse
+shell-integration-features = no-cursor
 
 auto-update = check
 
+window-height = 35
+window-width = 135
 window-decoration = true
 window-padding-x = 10
 window-padding-y = 10
