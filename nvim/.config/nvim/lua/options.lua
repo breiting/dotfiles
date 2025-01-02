@@ -16,6 +16,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.colorcolumn = '120'
 vim.opt.cursorline = true
+vim.opt.signcolumn = 'yes'
 
 -- Global Keymaps
 vim.keymap.set("n", "<Esc>", function()
@@ -28,4 +29,5 @@ vim.cmd [[
   highlight NonText guibg=none
   highlight Normal ctermbg=none
   highlight NonText ctermbg=none
+  highlight SignColumn guibg=none
 ]]
