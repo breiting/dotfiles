@@ -23,6 +23,8 @@ vim.keymap.set("n", "<Esc>", function()
   vim.cmd('nohlsearch')
 end, { desc = "Clear search highlights", silent = true })
 
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open the parent directory" })
+
 -- Background transparent
 vim.cmd [[
   highlight Normal guibg=none

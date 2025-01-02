@@ -7,7 +7,7 @@ return {
 
       local icons = require 'mini.icons'
       icons.setup {
-	style = 'glyph',
+        style = 'glyph',
       }
     end
   }
