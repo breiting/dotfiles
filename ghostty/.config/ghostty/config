@@ -4,8 +4,9 @@ background-opacity = 0.65
 background = #000000
 background-blur-radius = 20
 
-# font-family = RobotoMono Nerd Font Mono
-font-family = JetBrainsMonoNL Nerd Font
+font-family = "RobotoMono Nerd Font Md"
+font-style-italic = false
+font-style-bold = false
 font-size = 16
 
 macos-titlebar-style = hidden
