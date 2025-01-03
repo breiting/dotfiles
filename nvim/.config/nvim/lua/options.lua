@@ -17,6 +17,7 @@ vim.opt.relativenumber = true
 vim.opt.colorcolumn = '120'
 vim.opt.cursorline = true
 vim.opt.signcolumn = 'yes'
+vim.opt.wrap = false
 
 -- Global Keymaps
 vim.keymap.set("n", "<Esc>", function()
@@ -24,12 +25,11 @@ vim.keymap.set("n", "<Esc>", function()
 end, { desc = "Clear search highlights", silent = true })
 
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open the parent directory" })
+vim.keymap.set("n", "<leader>t", "<CMD>NvimTreeToggle<CR>")
 
 -- Background transparent
 vim.cmd [[
-  highlight Normal guibg=none
-  highlight NonText guibg=none
-  highlight Normal ctermbg=none
-  highlight NonText ctermbg=none
+  highlight Normal guibg=none ctermbg=none
+  highlight NonText guibg=none ctermbg=none
   highlight SignColumn guibg=none
 ]]
