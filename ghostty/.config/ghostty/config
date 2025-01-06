@@ -26,3 +26,6 @@ window-padding-x = 10
 window-padding-y = 10
 
 window-padding-balance = true
+
+# Important, otherwise Umlauts with Option-aou will not work in macOS
+macos-option-as-alt = false
