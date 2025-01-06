@@ -1,6 +1,6 @@
 return {
   {
-    'stevearc/oil.nvim',
+    "stevearc/oil.nvim",
     opts = {},
     -- Optional dependencies
     dependencies = { { "echasnovski/mini.icons", opts = {} } },
@@ -208,6 +208,6 @@ return {
           border = "rounded",
         },
       })
-    end
-  }
+    end,
+  },
 }
