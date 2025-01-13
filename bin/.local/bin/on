@@ -1,0 +1,26 @@
+#!/bin/zsh
+#
+# This script generates a new note for the Obsidian INBOX from the command line
+
+# Generate a timestamp for the filename
+timestamp=$(date "+%Y-%m-%d_%H-%M-%S")
+
+# Define the filename with the timestamp
+file_name="${timestamp}.md"
+
+# Define the directory for Obsidian notes
+obsidian_dir="/Users/breiting/notes/INBOX"
+
+# Create the file and add a frontmatter template
+{
+    echo "---"
+    echo "date: $(date "+%Y-%m-%d %H:%M:%S")"
+    echo "tags: []"
+    echo "source: cli"
+    echo "---"
+    echo ""
+} > "${obsidian_dir}/${file_name}"
+
+
+# Open the file in Neovim and move the cursor to the end of the file
+nvim + "${obsidian_dir}/${file_name}"

@@ -7,3 +7,4 @@ stow tmux
 stow nvim
 stow git
 stow ghostty
+stow bin
