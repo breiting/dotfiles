@@ -65,6 +65,9 @@ alias gp='git push'
 alias g='git status'
 alias lg=lazygit
 
+# Review all open INBOX notes from Obsidian
+alias or='nvim $HOME/notes/INBOX/*.md'
+
 if [[ $platform == 'Darwin' ]]; then
     alias vi='/opt/homebrew/bin/nvim'
 else
