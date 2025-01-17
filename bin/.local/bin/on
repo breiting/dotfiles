@@ -9,7 +9,7 @@ timestamp=$(date "+%Y-%m-%d")
 if [ -n "$1" ]; then
     # Use the provided title for the filename and frontmatter
     title="$1"
-    file_name="${timestamp} ${title}.md"
+    file_name="${title}.md"
 else
     # Default filename and title if no parameter is provided
     title="New Note"
@@ -17,7 +17,7 @@ else
 fi
 
 # Replace spaces with dashes in the filename (optional if needed)
-file_name=$(echo "$file_name" | sed 's/ /-/g')
+# file_name=$(echo "$file_name" | sed 's/ /-/g')
 
 # Define the directory for Obsidian notes
 obsidian_dir="$HOME/notes/INBOX"
