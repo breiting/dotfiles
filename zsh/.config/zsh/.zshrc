@@ -34,7 +34,10 @@ fi
 export GOPATH=$HOME/workspace/go
 
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:$GOPATH/bin:$PATH"
-export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
+export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64:/opt/homebrew/lib
+
+# Path for dynamically loading libraries
+export DYLD_LIBRARY_PATH=/opt/homebrew/lib:$DYLD_LIBRARY_PATH
 
 # Enable VIM mode
 bindkey -v
