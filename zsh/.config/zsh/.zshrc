@@ -67,6 +67,7 @@ alias ggg='git pull -r'
 alias gp='git push'
 alias g='git status'
 alias lg=lazygit
+alias xx='source .venv/bin/activate'
 
 # Review all open INBOX notes from Obsidian
 alias or='nvim $HOME/notes/INBOX/*.md'
@@ -106,3 +107,5 @@ if [[ $platform == 'Linux' ]]; then
 fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+. "$HOME/.local/share/../bin/env"
