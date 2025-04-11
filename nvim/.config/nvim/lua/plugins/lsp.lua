@@ -129,7 +129,7 @@ return {
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {},
         -- gopls = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -153,6 +153,8 @@ return {
                 pylsp_mypy = { enabled = false },
                 pylsp_black = { enabled = false },
                 pylsp_isort = { enabled = false },
+                rope_autoimport = { enabled = true },
+                rope_completion = { enabled = true },
               },
             },
           },
@@ -173,17 +175,17 @@ return {
               end,
               description = "Ruff: Fix all auto-fixable problems",
             },
-            RuffOrganizeImports = {
-              function()
-                vim.lsp.buf.execute_command({
-                  command = "ruff.applyOrganizeImports",
-                  arguments = {
-                    { uri = vim.uri_from_bufnr(0) },
-                  },
-                })
-              end,
-              description = "Ruff: Format imports",
-            },
+            -- RuffOrganizeImports = {
+            --   function()
+            --     vim.lsp.buf.execute_command({
+            --       command = "ruff.applyOrganizeImports",
+            --       arguments = {
+            --         { uri = vim.uri_from_bufnr(0) },
+            --       },
+            --     })
+            --   end,
+            --   description = "Ruff: Format imports",
+            -- },
           },
         },
 
@@ -218,6 +220,7 @@ return {
         "stylua", -- Used to format Lua code
         "pylsp",
         "ruff",
+        "clangd",
         "checkmake",
         "prettier",
       })
