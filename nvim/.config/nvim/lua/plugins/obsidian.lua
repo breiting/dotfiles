@@ -19,11 +19,11 @@ return {
         },
       },
 
-      daily_notes = {
-        folder = "Journal",
-        date_format = "%Y-%m-%d",
-      },
-
+      -- daily_notes = {
+      --   folder = "Journal",
+      --   date_format = "%Y-%m-%d",
+      -- },
+      --
       disable_frontmatter = true,
 
       attachments = {
