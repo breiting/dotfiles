@@ -1,8 +1,8 @@
 gui:
   timeFormat: '02 Jan 06 15:04 MST' # https://pkg.go.dev/time#Time.Format
   theme:
-    selectedLineBgColor:
-      - darkgray
+    # selectedLineBgColor:
+    #   - darkgray
     selectedRangeBgColor:
       - default
   showFileTree: false
