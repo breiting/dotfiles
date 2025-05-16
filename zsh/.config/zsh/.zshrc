@@ -33,7 +33,7 @@ fi
 
 export GOPATH=$HOME/workspace/go
 
-export PATH="$HOME/.local/bin:/opt/homebrew/bin:$GOPATH/bin:$PATH"
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:$GOPATH/bin:/Library/TeX/texbin:$PATH"
 export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64:/opt/homebrew/lib
 
 # Path for dynamically loading libraries
