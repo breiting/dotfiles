@@ -14,8 +14,8 @@ return {
           path = "~/notes",
         },
         {
-          name = "book",
-          path = "~/workspace/book-mmi/zettelkasten",
+          name = "mmi",
+          path = "~/mmi",
         },
       },
 
