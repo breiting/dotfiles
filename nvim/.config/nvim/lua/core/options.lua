@@ -26,6 +26,7 @@ vim.opt.tabstop = 4               -- Set tabstop
 vim.opt.timeoutlen = 300          -- Decrease mapped sequence wait time
 vim.opt.updatetime = 250          -- Decrease update time
 vim.opt.wrap = false              -- Display lines as long as necessary
+vim.opt.winborder = "rounded"     -- Display nice lines for float menus
 
 --- LaTeX
 vim.g.tex_flavor = "latex"
