@@ -1,0 +1,45 @@
+#!/bin/zsh
+#
+# This script generates a new Zettelkasten Permanent note
+
+# Generate a timestamp for the filename
+timestamp=$(date "+%Y%m%d%H%M")
+created=$(date "+%Y-%m-%d %H:%M:%S")
+
+# Check if a title parameter is provided
+if [ -n "$1" ]; then
+    # Use the provided title for the filename and frontmatter
+    title="$1"
+    file_name="${timestamp}_${title}.md"
+else
+    # Default filename and title if no parameter is provided
+    title="New Note"
+    file_name="${timestamp}_New_Note.md"
+fi
+
+# Replace spaces with dashes in the filename (optional if needed)
+file_name=$(echo "$file_name" | sed 's/ /_/g')
+
+# Define the directory for Obsidian notes
+obsidian_dir="$HOME/mmi/permanent"
+
+{
+    echo "---"
+    echo "id: ${timestamp}"
+    echo "type: permanent"
+    echo "title: ${title}"
+    echo "tags: [permanent]"
+    echo "created: ${created}"
+    echo "---"
+    echo "# 🧠 ${title}"
+    echo ""
+	echo "## 💡 Kerngedanke"
+    echo ""
+	echo "(Ein Gedanke pro Datei, in eigenen Worten, klar und verständlich.)"
+    echo ""
+	echo "## 🔗 Verbindungen"
+    echo ""
+} > "${obsidian_dir}/${file_name}"
+
+# Open the file in Neovim and move the cursor to the end of the file
+nvim + "${obsidian_dir}/${file_name}"
