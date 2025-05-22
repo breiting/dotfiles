@@ -13,12 +13,7 @@ return {
         -- a list of all tools you want to ensure are installed upon start
         ensure_installed = {
 
-          {
-            "gopls",
-            condition = function()
-              return not os.execute("go version")
-            end,
-          },
+          "gopls",
           "clang-format",
           "json-lsp",
           "lua-language-server",

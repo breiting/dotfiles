@@ -1,6 +1,6 @@
 return {
   {
-    "epwalsh/obsidian.nvim",
+    "obsidian-nvim/obsidian.nvim",
     version = "*",
     lazy = true,
     ft = "markdown",
@@ -17,6 +17,11 @@ return {
           name = "mmi",
           path = "~/mmi",
         },
+      },
+
+      completion = {
+        blink = true,
+        min_chars = 2,
       },
 
       -- daily_notes = {
