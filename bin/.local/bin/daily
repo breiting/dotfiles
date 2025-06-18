@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# Usage: daily YYYY-MM-DD
+if [ -z "$1" ]; then
+  echo "Usage: daily YYYY-MM-DD"
+  exit 1
+fi
+
+DATE_INPUT="$1"
+
+function calc_date() {
+  local base_date=$1
+  local offset_days=$2
+
+  if command -v gdate >/dev/null 2>&1; then
+    # GNU date (via coreutils)
+    gdate -d "$base_date $offset_days day" "+%Y-%m-%d"
+  elif date -d "$base_date $offset_days day" "+%Y-%m-%d" >/dev/null 2>&1; then
+    # GNU date native (Linux)
+    date -d "$base_date $offset_days day" "+%Y-%m-%d"
+  else
+    # macOS ohne -v: manuell rechnen mit Sekunden
+    local epoch_base
+    local epoch_target
+    epoch_base=$(date -j -f "%Y-%m-%d" "$base_date" "+%s")
+    epoch_target=$((epoch_base + offset_days * 86400))
+    date -j -f "%s" "$epoch_target" "+%Y-%m-%d"
+  fi
+}
+
+# Validierung
+if ! calc_date "$DATE_INPUT" 0 >/dev/null 2>&1; then
+  echo "Ungültiges Datum: $DATE_INPUT"
+  exit 2
+fi
+
+DATE_FILE="$DATE_INPUT.md"
+PREV_DATE=$(calc_date "$DATE_INPUT" -1)
+NEXT_DATE=$(calc_date "$DATE_INPUT" 1)
+echo $PREV_DATE
+echo $NEXT_DATE
+
+# Dateiinhalt schreiben
+cat <<EOF > "$DATE_FILE"
+---
+tags:
+  - Daily
+date: $DATE_INPUT
+Bewegung: false
+Kraft: false
+Medidation: false
+Alkohol: false
+Lesen: false
+Kochen: false
+---
+<< [[${PREV_DATE}]] | [[${NEXT_DATE}]] >>
+
+## ✍️ Notizen
+- 
+
+## 💡 Highlights des Tages
+- 
+EOF
+
+echo "Tagesdatei $DATE_FILE wurde erstellt."
+
