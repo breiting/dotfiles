@@ -69,6 +69,8 @@ alias g='git status'
 alias lg=lazygit
 alias xx='source .venv/bin/activate'
 
+alias writer='nvim -u ~/workspace/nvim-writer.nvim/writer.lua'
+
 # Review all open INBOX notes from Obsidian
 alias or='nvim $HOME/notes/INBOX/*.md'
 
