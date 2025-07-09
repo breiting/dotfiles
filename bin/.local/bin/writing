@@ -2,24 +2,34 @@
 
 FILE=$1
 SESSION="writing"
+TMUX="$HOME/workspace/nvim-writer.nvim/tmux.conf"
 
-tmux kill-session -t $SESSION 2>/dev/null
+TMUX_CMD="tmux -f $TMUX"
 
-tmux new-session -d -s $SESSION
-tmux split-window -h -p 15
-tmux select-pane -t "$SESSION:1.1"
-tmux split-window -h -p 85
+# Erkennung: externer Monitor oder nicht
+if system_profiler SPDisplaysDataType | grep -q "Display Type: External"; then
+  PADDING=15
+else
+  PADDING=5
+fi
+
+$TMUX_CMD kill-session -t $SESSION 2>/dev/null
+
+$TMUX_CMD new-session -d -s $SESSION
+$TMUX_CMD split-window -h -p $PADDING
+$TMUX_CMD select-pane -t "$SESSION:1.1"
+$TMUX_CMD split-window -h -p $((100 - PADDING))
 
 # Linke Pane 1
-tmux send-keys -t $SESSION:1.1 "clear; while true; do sleep 86400; done" C-m
+$TMUX_CMD send-keys -t $SESSION:1.1 "clear; while true; do sleep 86400; done" C-m
 
 # Zentrale Pane 2
 if [ -n "$FILE" ]; then
-	tmux send-keys -t $SESSION:1.2 "writer \"$FILE\"" C-m 
+	$TMUX_CMD send-keys -t $SESSION:1.2 "writer \"$FILE\"" C-m 
 fi
 
 # Rechte Pane 3
-tmux send-keys -t $SESSION:1.3 "clear; while true; do sleep 86400; done" C-m
+$TMUX_CMD send-keys -t $SESSION:1.3 "clear; while true; do sleep 86400; done" C-m
 #
-tmux attach-session -t writing
+$TMUX_CMD -f $TMUX attach-session -t writing
 
