@@ -1,0 +1,45 @@
+#!/bin/bash
+set -euo pipefail
+
+# Config: Set vault directory
+VAULT_DIR="${HOME}/zettel"
+
+# Generate random 3-digit ID
+generate_id() {
+  printf "%03d" $(( RANDOM % 1000 ))
+}
+
+# Determine target date (default: today or provided argument)
+if [ $# -eq 0 ]; then
+  TARGET_DATE=$(date +"%Y-%m-%d")
+else
+  TARGET_DATE="$1"
+fi
+
+# Search for existing journal note with matching date in title field
+existing_file=$(grep -l "title: $TARGET_DATE" "$VAULT_DIR"/*.md 2>/dev/null | head -n 1 || true)
+
+if [ -n "$existing_file" ]; then
+  # Journal note exists → open it
+  nvim "+normal! G" "$existing_file"
+  exit 0
+fi
+
+# Create new journal note
+id="${TARGET_DATE}-$(generate_id)"
+filename="${VAULT_DIR}/${id}.md"
+
+# Write frontmatter
+cat <<EOF > "$filename"
+---
+id: $id
+title: $TARGET_DATE
+tags: [journal]
+date: $TARGET_DATE
+habits: []
+---
+
+EOF
+
+# Open in Neovim at end of file in insert mode
+nvim "+normal! G" "$filename"
