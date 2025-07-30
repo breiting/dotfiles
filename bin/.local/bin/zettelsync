@@ -1,0 +1,5 @@
+#!/bin/sh
+#
+# Syncs my zettel notes with my NAS
+
+rsync -ahv --delete ~/zettel/ /Volumes/home/ZETTEL/
