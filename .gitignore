@@ -7,3 +7,4 @@ zsh/.config/zsh/.zsh_sessions/
 bin/.local/bin/uv
 bin/.local/bin/uvx
 zsh/.config/zsh/.zsh_history
+.openai.key
