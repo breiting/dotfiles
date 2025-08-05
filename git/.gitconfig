@@ -17,8 +17,6 @@
     st = status
     unstage = reset HEAD --
     last = log -1 HEAD
-[github]
-    user = breiting
 [fetch]
     prune = true
 [difftool]
