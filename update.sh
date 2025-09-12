@@ -8,3 +8,4 @@ stow nvim
 stow git
 stow ghostty
 stow bin
+stow presenterm
