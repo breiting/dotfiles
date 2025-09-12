@@ -33,7 +33,8 @@ fi
 
 export GOPATH=$HOME/workspace/go
 
-export PATH="$HOME/.local/bin:/opt/homebrew/bin:$GOPATH/bin:/Library/TeX/texbin:$PATH"
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:$GOPATH/bin:/Library/TeX/texbin:$PATH:$HOME/.cargo/bin"
+export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
 export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64:/opt/homebrew/lib
 
 # Path for dynamically loading libraries
@@ -56,6 +57,7 @@ elif [[ $platform == 'Darwin' ]]; then
 fi
 
 alias p='python3'
+alias ptt='presenterm'
 alias xxx='source $XDG_CONFIG_HOME/zsh/.zshrc'
 alias gd='git difftool --extcmd "icdiff -N"'
 alias l='ls -laG'

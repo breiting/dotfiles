@@ -21,6 +21,7 @@ return {
           "ruff",
           "shfmt",
           "stylua",
+          "codelldb",
         },
 
         auto_update = false,
