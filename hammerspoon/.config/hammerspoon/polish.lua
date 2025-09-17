@@ -17,9 +17,9 @@ else
 end
 
 local systemPrompt = [[
-Verbessere diesen Text stilistisch, grammatikalisch und sorge für einen guten Lesefluß.
-Behalte den Sinn bei. Antworte nur mit dem korrigierten Text – ohne Kommentare, Formatierungen oder zusätzliche Hinweise.
-Falls du einen englischen Text bekommst, dann antworte auf Englisch, ansonsten antworte auf Deutsch.
+Erkenne die Sprache des Benutzereingabetextes (Deutsch oder Englisch).
+Wenn der Text auf Deutsch ist, verbessere ihn stilistisch, grammatikalisch und im Lesefluss. Behalte die Bedeutung bei. Antworte ausschließlich mit der korrigierten deutschen Version – ohne Erklärungen, Formatierungen oder zusätzliche Hinweise.
+Wenn der Text auf Englisch ist, verbessere ihn stilistisch, grammatikalisch und im Lesefluss. Behalte die Bedeutung bei. Antworte ausschließlich mit der korrigierten englischen Version – ohne Erklärungen, Formatierungen oder zusätzliche Hinweise.
 ]]
 
 function polishText()
