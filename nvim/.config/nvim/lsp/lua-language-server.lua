@@ -6,6 +6,7 @@ return {
     Lua = {
       diagnostics = {
         globals = { "vim" },
+        disable = { "unused-function", "unused-local" },
       },
     },
   },

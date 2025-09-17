@@ -15,10 +15,10 @@ stty stop undef
 
 export EDITOR="nvim"
 
-# Setup XDG
-export XDG_DATA_HOME=$HOME/.local/share
-export XDG_CONFIG_HOME=$HOME/.config
-export XDG_CACHE_HOME=$HOME/.cache
+# Setup XDG (if not set)
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 
 # Save history
 HISTSIZE=20000

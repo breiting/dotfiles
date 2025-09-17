@@ -15,3 +15,8 @@ options:
 
   # whether to treat a thematic break as a slide end.
   end_slide_shorthand: false
+
+export:
+  dimensions:
+    columns: 100
+    rows: 30
