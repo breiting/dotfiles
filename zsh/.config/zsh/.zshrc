@@ -106,10 +106,8 @@ PROMPT='%F{5}[%F{2}%m@%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f> '
 # Enable fuzzy finder
 if [[ $platform == 'Linux' ]]; then
     # Activate FZF fuzzy finder
-    source /usr/share/fzf/completion.zsh
-    source /usr/share/fzf/key-bindings.zsh
+    source /usr/share/doc/fzf/examples/completion.zsh
+    source /usr/share/doc/fzf/examples/key-bindings.zsh
 fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-. "$HOME/.local/share/../bin/env"
