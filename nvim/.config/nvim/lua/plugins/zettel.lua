@@ -1,6 +1,6 @@
 return {
   {
-    dir = "~/workspace/zettel.nvim/",
+    "breiting/zettel.nvim",
     enabled = true,
     name = "zettel",
     lazy = false,
