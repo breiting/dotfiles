@@ -19,6 +19,7 @@ end
 local systemPrompt = [[
 Verbessere diesen Text stilistisch, grammatikalisch und sorge für einen guten Lesefluß.
 Behalte den Sinn bei. Antworte nur mit dem korrigierten Text – ohne Kommentare, Formatierungen oder zusätzliche Hinweise.
+Falls du einen englischen Text bekommst, dann antworte auf Englisch, ansonsten antworte auf Deutsch.
 ]]
 
 function polishText()
