@@ -1,0 +1,27 @@
+[font]
+size = 11.0
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "JetBrainsMono Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "JetBrainsMono Nerd Font"
+style = "Italic"
+
+[env]
+LANG = "en_US.UTF-8"
+LC_ALL = "en_US.UTF-8"
+
+[keyboard]
+bindings = [
+  # Schrift größer
+  { key = "+", mods = "Alt|Shift", action = "IncreaseFontSize" },
+
+  # Schrift kleiner
+  { key = "_", mods = "Alt|Shift", action = "DecreaseFontSize" },
+]
