@@ -10,7 +10,7 @@ return {
     },
     config = function()
       require("zettel").setup({
-        vault_dir = "~/zettel",
+        vault_dir = "~/notes",
         note_types = { "note", "capture", "meeting", "mutig", "purist", "journal", "view", "meta" },
       })
     end,
