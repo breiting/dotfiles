@@ -20,7 +20,7 @@ return {
           json = { "prettier" },
           jsonc = { "prettier" },
           yaml = { "prettier" },
-          markdown = { "prettier_safe_md" },
+          markdown = { "prettier" },
           lua = { "stylua" },
         },
         format_on_save = {
