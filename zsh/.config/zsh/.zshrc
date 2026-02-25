@@ -33,7 +33,7 @@ fi
 
 export GOPATH=$HOME/workspace/go
 
-export PATH="$HOME/codecad/bin:$HOME/.local/bin:/opt/homebrew/bin:$GOPATH/bin:/Library/TeX/texbin:$PATH:$HOME/.cargo/bin"
+export PATH="/opt/homebrew/opt/openjdk@17/bin:$HOME/codecad/bin:$HOME/.local/bin:/opt/homebrew/sbin:/opt/homebrew/bin:$GOPATH/bin:/Library/TeX/texbin:$PATH:$HOME/.cargo/bin"
 export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
 export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64:/opt/homebrew/lib
 
@@ -98,6 +98,12 @@ zstyle ':vcs_info:*' enable git
     git status --porcelain | grep '??' &> /dev/null ; then
     hook_com[unstaged]+='%F{1}??%f'
   fi
+}
+
+# Allow processing being called from command line
+pde() {
+  env -u JAVA_HOME -u JDK_HOME -u JAVA_TOOL_OPTIONS -u _JAVA_OPTIONS \
+    /Applications/Processing.app/Contents/MacOS/Processing cli "$@"
 }
 
 precmd () { vcs_info }
