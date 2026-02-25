@@ -54,6 +54,8 @@ vim.lsp.enable({
   "pyright",
   "ruff",
   "gopls",
+  "neocmakelsp",
+  "codecad",
 })
 
 -- Enable auto-completion and linting
