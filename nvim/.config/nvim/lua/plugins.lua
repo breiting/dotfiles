@@ -96,6 +96,7 @@ require("lazy").setup({
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
+        branch = "master",
         event = { "BufReadPost", "BufNewFile" },
         opts = {
             ensure_installed = {
