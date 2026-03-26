@@ -55,6 +55,7 @@ vim.lsp.config("lua_ls", {
     },
 })
 
+
 vim.lsp.config("pyright", {
     cmd = { "pyright-langserver", "--stdio" },
     filetypes = { "python" },
@@ -63,19 +64,28 @@ vim.lsp.config("pyright", {
         "pyrightconfig.json",
         "setup.py",
         "setup.cfg",
-        "requirements.txt"
+        "requirements.txt",
     },
     capabilities = capabilities,
     settings = {
         pyright = {
-            disableOrganizeImports = true,
-            disableLanguageServices = false,
+            disableOrganizeImports = true, -- Let Ruff handle imports
+            disableTaggedHints = true,     -- Hide faded/struck hint diagnostics
         },
         python = {
             analysis = {
-                autoImportCompletions = true,
-                autoSearchPaths = true,
-                useLibraryCodeForTypes = true,
+                typeCheckingMode = "basic",         -- Keep Pyright focused on types
+                diagnosticMode = "openFilesOnly",   -- Only report diagnostics for open files
+                autoImportCompletions = true,       -- Keep import completion
+                autoSearchPaths = true,             -- Auto-detect common source roots
+                useLibraryCodeForTypes = true,      -- Improve library typing when stubs are incomplete
+                diagnosticSeverityOverrides = {
+                    reportUnusedImport = "none",    -- Ruff handles this
+                    reportUnusedVariable = "none",  -- Ruff handles this
+                    reportDuplicateImport = "none", -- Ruff handles this
+                    reportImportCycles = "none",    -- Optional: reduce Pyright noise
+                    reportShadowedImports = "none", -- Ruff handles import hygiene better
+                },
             },
         },
     },
@@ -90,6 +100,7 @@ vim.lsp.config("ruff", {
         ".ruff.toml",
         "setup.py",
         "setup.cfg",
+        ".git",
     },
     capabilities = capabilities,
 })
@@ -111,3 +122,39 @@ vim.lsp.enable("lua_ls")
 vim.lsp.enable("pyright")
 vim.lsp.enable("ruff")
 vim.lsp.enable("neocmakelsp")
+
+-- LSP configuration stuff
+
+vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(event)
+        local mapl = function(mode, lhs, rhs, desc)
+            vim.keymap.set(mode, lhs, rhs, { buffer = event.buf, desc = desc })
+        end
+
+        mapl("n", "gd", vim.lsp.buf.definition, "Definition")
+        mapl("n", "gr", vim.lsp.buf.references, "References")
+        mapl("n", "gi", vim.lsp.buf.implementation, "Implementation")
+        mapl("n", "K", vim.lsp.buf.hover, "Hover")
+        mapl("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
+        mapl({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
+        mapl("n", "<leader>f", function()
+            vim.lsp.buf.format({ async = true })
+        end, "Format buffer")
+        mapl("n", "<leader>ih", function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }), { bufnr = event.buf })
+        end, "Toggle inlay hints")
+    end,
+})
+
+vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if not client then
+            return
+        end
+
+        if client.name == "ruff" then
+            client.server_capabilities.hoverProvider = false
+        end
+    end,
+})

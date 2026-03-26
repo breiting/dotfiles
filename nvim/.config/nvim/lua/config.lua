@@ -107,26 +107,3 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.keymap.set("n", "k", "gk", { buffer = event.buf, silent = true })
     end,
 })
-
--- LSP stuff
-
-vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function(event)
-        local mapl = function(mode, lhs, rhs, desc)
-            vim.keymap.set(mode, lhs, rhs, { buffer = event.buf, desc = desc })
-        end
-
-        mapl("n", "gd", vim.lsp.buf.definition, "Definition")
-        mapl("n", "gr", vim.lsp.buf.references, "References")
-        mapl("n", "gi", vim.lsp.buf.implementation, "Implementation")
-        mapl("n", "K", vim.lsp.buf.hover, "Hover")
-        mapl("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
-        mapl({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
-        mapl("n", "<leader>f", function()
-            vim.lsp.buf.format({ async = true })
-        end, "Format buffer")
-        mapl("n", "<leader>ih", function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }), { bufnr = event.buf })
-        end, "Toggle inlay hints")
-    end,
-})
