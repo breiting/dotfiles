@@ -20,6 +20,11 @@ export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 
+# Android
+export ANDROID_HOME="$HOME/Android/sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export ANDROID_AVD_HOME="$HOME/.config/.android/avd"
+
 # Save history
 HISTSIZE=20000
 HISTFILE=$XDG_DATA_HOME/zsh/history
@@ -35,6 +40,8 @@ export GOPATH=$HOME/workspace/go
 
 export PATH="/opt/homebrew/opt/openjdk@17/bin:$HOME/codecad/bin:$HOME/.local/bin:/opt/homebrew/sbin:/opt/homebrew/bin:$GOPATH/bin:/Library/TeX/texbin:$PATH:$HOME/.cargo/bin"
 export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
+export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+export PATH="$ANDROID_HOME/emulator:$PATH"
 export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64:/opt/homebrew/lib
 
 # Path for dynamically loading libraries
@@ -76,11 +83,7 @@ alias writer='nvim -u ~/workspace/nvim-writer.nvim/writer.lua'
 # Review all open INBOX notes from Obsidian
 alias or='nvim $HOME/notes/INBOX/*.md'
 
-if [[ $platform == 'Darwin' ]]; then
-    alias vi='/opt/homebrew/bin/nvim'
-else
-    alias vi='/usr/local/bin/nvim'
-fi
+alias vi='/usr/local/bin/nvim'
 
 # Setup prompt
 setopt prompt_subst
