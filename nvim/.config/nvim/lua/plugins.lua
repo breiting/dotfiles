@@ -216,6 +216,15 @@ require("lazy").setup({
                 desc = "Live grep",
             },
             {
+                "<leader>fm",
+                function()
+                    require("telescope.builtin").lsp_document_symbols({
+                        symbols = { "Function", "Method" },
+                    })
+                end,
+                desc = "Find methods and function",
+            },
+            {
                 "<leader><Esc>",
                 function()
                     require("telescope.builtin").buffers({
