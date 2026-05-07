@@ -17,7 +17,7 @@ automatically-unhide-macos-hidden-apps = false
 persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
 # Mouse follows focused window
-on-focus-changed = 'move-mouse window-lazy-center'
+# on-focus-changed = 'move-mouse window-lazy-center'
 
 [key-mapping]
 preset = 'qwerty'
@@ -96,4 +96,8 @@ run = 'move-node-to-workspace 2'
 
 [[on-window-detected]]
 if.app-id = 'org.mozilla.firefox'
-run = 'move-node-to-workspace 3'
+run = 'move-node-to-workspace 9'
+
+[[on-window-detected]]
+if.app-id = 'org.mozilla.thunderbird'
+run = 'layout floating'

@@ -1,7 +1,9 @@
 background-opacity = 0.95
 
 font-family = "JetBrainsMono Nerd Font Mono Lt"
-font-size = 24
+font-size = 20
+
+foreground = bbc2cf
 
 quick-terminal-position = "center"
 quick-terminal-screen = "main"
