@@ -63,7 +63,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
             return
         end
 
-        if ft == "arduino" then
+        if ft == "arduino" or ft == 'java' then
             format_with("google-java-format", { "-" }, args.buf)
             return
         end
