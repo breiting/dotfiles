@@ -12,7 +12,6 @@ brew "starship"
 brew "typst"
 brew "uv"
 brew "yazi"
-brew "firefox"
 
 # Development and Neovim source-build baseline
 brew "cmake"
@@ -31,6 +30,8 @@ cask "hammerspoon"
 cask "bitwarden"
 cask "vicinae"
 cask "font-jetbrains-mono-nerd-font"
+cask "firefox"
+cask "libreoffice"
 
 # Window management
 tap "nikitabobko/tap", trusted: {
