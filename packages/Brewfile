@@ -12,6 +12,7 @@ brew "starship"
 brew "typst"
 brew "uv"
 brew "yazi"
+brew "firefox"
 
 # Development and Neovim source-build baseline
 brew "cmake"
