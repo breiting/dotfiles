@@ -152,20 +152,12 @@ alt-shift-l = ['join-with right', 'mode main']
 # assignment is stable enough to be part of the workstation model.
 
 [[on-window-detected]]
-if.app-id = 'com.mitchellh.ghostty'
-run = 'move-node-to-workspace 1'
-
-[[on-window-detected]]
 if.app-id = 'org.mozilla.firefox'
-run = 'move-node-to-workspace 2'
+run = 'move-node-to-workspace 9'
 
 [[on-window-detected]]
 if.app-id = 'org.mozilla.thunderbird'
-run = 'move-node-to-workspace 3'
-
-[[on-window-detected]]
-if.app-id = 'org.whispersystems.signal-desktop'
-run = 'move-node-to-workspace 3'
+run = 'move-node-to-workspace 8'
 
 # Generic utility/dialog-style windows can opt into floating by title.
 [[on-window-detected]]
