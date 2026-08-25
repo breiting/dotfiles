@@ -10,7 +10,7 @@ setup_brew_environment() {
         return
     fi
 
-    # Homebrew's supported default prefix differs between Apple Silicon and Intel Macs.
+    # Homebrew uses /opt/homebrew on Apple Silicon and /usr/local on Intel Macs.
     if [[ -x /opt/homebrew/bin/brew ]]; then
         eval "$(/opt/homebrew/bin/brew shellenv)"
     elif [[ -x /usr/local/bin/brew ]]; then
@@ -24,7 +24,7 @@ install_homebrew() {
 
     if ! ui_confirm "Install Homebrew now?"; then
         ui_warn "Homebrew installation skipped."
-        return
+        return 1
     fi
 
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -42,15 +42,12 @@ check_homebrew() {
     setup_brew_environment
 
     if ! command -v brew >/dev/null 2>&1; then
-        install_homebrew
-        return
+        install_homebrew || return 1
+    else
+        ui_success "Homebrew found: $(brew --version | head -n 1)"
     fi
 
-    ui_success "Homebrew found: $(brew --version | head -n 1)"
-
-    # Homebrew itself is the source of truth for updating Homebrew and formula metadata.
-    # We intentionally do not guess whether a version number is stale without contacting
-    # Homebrew's remote repositories.
+    # Homebrew itself is the source of truth for Homebrew and formula metadata updates.
     if ui_confirm "Check for Homebrew updates now?"; then
         ui_step "Updating Homebrew"
         brew update
@@ -60,6 +57,57 @@ check_homebrew() {
     fi
 }
 
+install_brewfile() {
+    local brewfile="$ROOT_DIR/packages/Brewfile"
+
+    if [[ ! -f "$brewfile" ]]; then
+        ui_fail "Brewfile not found: $brewfile"
+        exit 1
+    fi
+
+    ui_step "macOS packages"
+
+    if brew bundle check --file "$brewfile" >/dev/null 2>&1; then
+        ui_success "All Brewfile packages are already installed."
+        return
+    fi
+
+    ui_info "The Brewfile contains the current macOS baseline."
+    if ! ui_confirm "Install missing Homebrew packages and applications?"; then
+        ui_warn "Brewfile installation skipped."
+        return
+    fi
+
+    brew bundle --file "$brewfile"
+    ui_success "Homebrew packages are up to date."
+}
+
+ensure_zsh_login_shell() {
+    local current_shell
+
+    current_shell="$(dscl . -read "/Users/$USER" UserShell 2>/dev/null | awk '{print $2}')"
+
+    if [[ "$current_shell" == "/bin/zsh" ]]; then
+        ui_success "Login shell is already /bin/zsh."
+        return
+    fi
+
+    ui_warn "Current login shell: ${current_shell:-unknown}"
+    if ! ui_confirm "Set /bin/zsh as the login shell?"; then
+        ui_info "Login shell change skipped."
+        return
+    fi
+
+    chsh -s /bin/zsh
+    ui_success "Login shell changed to /bin/zsh. It will apply to new terminal sessions."
+}
+
 ui_step "macOS bootstrap"
-check_homebrew
-ui_success "macOS base check completed. Brewfile installation will be added later."
+
+if check_homebrew; then
+    install_brewfile
+else
+    ui_warn "Homebrew is unavailable. Brewfile installation is skipped."
+fi
+
+ensure_zsh_login_shell

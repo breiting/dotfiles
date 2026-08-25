@@ -11,3 +11,5 @@ ripgrep
 fd-find
 fzf
 bat
+eza
+starship

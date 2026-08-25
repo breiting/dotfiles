@@ -2,29 +2,11 @@
 
 Personal workstation bootstrap and dotfiles for Fedora Linux and macOS.
 
-The repository is intentionally kept small and explicit. Native package managers are used for system software, GNU Stow manages deliberately selected dotfiles, and small Bash scripts provide the orchestration around them.
+The repository is intentionally small and explicit. Native package managers install system software, GNU Stow manages deliberately selected dotfiles, and small Bash scripts provide the orchestration.
 
-## Design principles
+## Current bootstrap scope
 
-- Keep the bootstrap small, readable, and safe to run repeatedly.
-- Prefer native package managers: DNF on Fedora and Homebrew on macOS.
-- Keep common and platform-specific configuration separate where it matters.
-- Do not automatically activate every configuration stored in the repository.
-- Add packages and dotfiles deliberately, one component at a time.
-- Never overwrite existing configuration during migration.
-- Avoid framework-style abstractions unless they solve a real problem.
-- Document non-obvious decisions in English.
-
-## Supported systems
-
-- Fedora Linux
-- macOS
-
-Other operating systems exit without making changes.
-
-## Bootstrap
-
-Run from the repository root:
+Run:
 
 ```sh
 ./bootstrap
@@ -32,76 +14,66 @@ Run from the repository root:
 
 The bootstrap currently:
 
-- identifies Fedora Linux or macOS;
-- on Fedora, checks a small baseline package list and offers to install only missing packages with DNF;
-- on macOS, detects Homebrew and can install it using the official installer;
-- when Homebrew already exists, shows the installed version and offers to run the official update check;
-- safely offers to activate the `git` Stow package.
-
-Running the bootstrap again is expected to be safe.
-
-## Fedora package baseline
-
-Fedora packages are declared in `packages/fedora.txt` with one package per line. Blank lines and comments are ignored.
-
-The baseline is intentionally small:
-
-```text
-git
-stow
-zsh
-tmux
-curl
-wget2-wget
-ripgrep
-fd-find
-fzf
-bat
-```
-
-`wget2-wget` is used on Fedora because it provides the `wget` command while remaining an explicit RPM package declaration.
+- detects Fedora Linux or macOS;
+- on Fedora, offers to install the small package baseline from `packages/fedora.txt`;
+- on macOS, installs Homebrew when requested, optionally checks Homebrew for updates, and offers to install the Brewfile baseline;
+- on macOS, verifies that `/bin/zsh` is the login shell and can change it when requested;
+- safely offers to activate the `git` and `zsh` Stow packages;
+- never adopts or overwrites an existing file or symlink from another dotfiles repository.
 
 ## Dotfile migration
 
-Dotfile packages are migrated one at a time.
+Packages are migrated one at a time. During the transition from an older repository, a Stow conflict is expected and is treated as a safe skip.
 
-The bootstrap never adopts or overwrites an existing file or symlink that belongs to another repository. Before activating a package, it performs a simulated Stow run. If Stow reports a conflict, the package is skipped and the existing configuration is left untouched.
-
-For example, while migrating from an older repository:
-
-```text
-~/.gitconfig -> ~/workspace/dotfiles/git/.gitconfig
-```
-
-the new repository will not replace that link automatically.
-
-A controlled migration is:
+Example for migrating a package named `zsh`:
 
 ```sh
-# Inspect removal from the old repository.
-stow --dir ~/workspace/dotfiles --target "$HOME" --delete --simulate --verbose=1 git
+stow --dir ~/workspace/dotfiles --target "$HOME" --delete --simulate --verbose=1 zsh
+stow --dir ~/workspace/dotfiles --target "$HOME" --delete zsh
 
-# Remove only the old Stow links.
-stow --dir ~/workspace/dotfiles --target "$HOME" --delete git
-
-# Return to the new repository and activate the package.
 cd ~/workspace/dotfiles-ng
 ./bootstrap
 ```
 
-Rollback is the reverse operation: delete the new package links and Stow the package from the old repository again.
+The old repository can be re-stowed at any time to roll back.
 
-## Git dotfiles
+## Zsh
 
-`git` is the first migrated Stow package and currently contains:
+The Zsh setup intentionally starts smaller than the legacy configuration.
 
-```text
-git/
-├── .gitconfig
-└── .gitignore
-```
+It keeps:
 
-The legacy `.git-completion.zsh` has intentionally not been migrated yet. Shell completion belongs to the later Zsh cleanup and should not be carried forward merely because it existed in the old repository.
+- `ZDOTDIR=~/.config/zsh`;
+- XDG base directories;
+- history and completion;
+- fzf integration;
+- a small set of aliases;
+- Starship.
+
+It deliberately does not migrate yet:
+
+- generated `.zcompdump` files;
+- Android, Flutter, Processing, Go, or other project-specific environment variables;
+- `LD_LIBRARY_PATH`;
+- shell plugins that clone themselves during shell startup;
+- the legacy `.git-completion.zsh`.
+
+These can be reintroduced individually when there is a concrete need.
+
+On macOS, the bootstrap uses Apple's `/bin/zsh` instead of installing a second Homebrew Zsh.
+
+## macOS Brewfile baseline
+
+The first macOS baseline includes CLI tools required by the shell and everyday workstation use, plus:
+
+- Ghostty
+- Karabiner-Elements
+- Hammerspoon
+- Bitwarden
+- Maccy
+- AeroSpace
+
+Larger or more specialized applications such as Docker, UTM, GIMP, Signal, VLC, SketchyBar, JankyBorders, Vicinae, and the source-built Neovim setup are intentionally deferred.
 
 ## Repository layout
 
@@ -109,8 +81,7 @@ The legacy `.git-completion.zsh` has intentionally not been migrated yet. Shell 
 .
 ├── bootstrap
 ├── git/
-│   ├── .gitconfig
-│   └── .gitignore
+├── zsh/
 ├── install/
 │   ├── common.sh
 │   ├── fedora.sh
@@ -124,11 +95,3 @@ The legacy `.git-completion.zsh` has intentionally not been migrated yet. Shell 
     ├── Brewfile
     └── fedora.txt
 ```
-
-## Homebrew updates
-
-The bootstrap does not infer that Homebrew is outdated from its local version number alone. Determining whether an update exists requires contacting Homebrew's repositories. When Homebrew is already installed, the bootstrap therefore offers an explicit `brew update` check instead of silently changing it.
-
-## Next steps
-
-After the Git package has been migrated and tested on the existing machines, the next dotfile package will be introduced deliberately.

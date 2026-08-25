@@ -1,1 +1,28 @@
-# macOS packages and applications will be added here deliberately, one group at a time.
+# Command-line baseline
+brew "git"
+brew "stow"
+brew "tmux"
+brew "lazygit"
+brew "ripgrep"
+brew "fd"
+brew "fzf"
+brew "bat"
+brew "eza"
+brew "starship"
+brew "typst"
+
+# Development baseline
+brew "cmake"
+brew "ninja"
+brew "pkgconf"
+
+# macOS applications
+cask "ghostty"
+cask "karabiner-elements"
+cask "hammerspoon"
+cask "bitwarden"
+cask "maccy"
+
+# AeroSpace is distributed from its official Homebrew tap.
+tap "nikitabobko/tap"
+cask "aerospace"

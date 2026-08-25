@@ -17,3 +17,4 @@ fi
 
 # Dotfile packages are introduced deliberately, one at a time.
 stow_package git
+stow_package zsh
