@@ -14,8 +14,7 @@ linux_scripts=(
     timer
 )
 
-macos_scripts=(
-)
+macos_scripts=()
 
 link_script() {
     local platform="$1"
@@ -65,23 +64,31 @@ link_script() {
     ui_success "$name"
 }
 
+link_group() {
+    local platform="$1"
+    shift
+    local script
+
+    for script in "$@"; do
+        link_script "$platform" "$script"
+    done
+}
+
 ui_step "Personal scripts"
 
 mkdir -p "$BIN_DIR"
 
-for script in "${common_scripts[@]}"; do
-    link_script common "$script"
-done
+link_group common "${common_scripts[@]}"
 
 case "$(uname -s)" in
     Linux)
-        for script in "${linux_scripts[@]}"; do
-            link_script linux "$script"
-        done
+        if (( ${#linux_scripts[@]} > 0 )); then
+            link_group linux "${linux_scripts[@]}"
+        fi
         ;;
     Darwin)
-        for script in "${macos_scripts[@]}"; do
-            link_script macos "$script"
-        done
+        if (( ${#macos_scripts[@]} > 0 )); then
+            link_group macos "${macos_scripts[@]}"
+        fi
         ;;
 esac
