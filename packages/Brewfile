@@ -29,7 +29,12 @@ cask "hammerspoon"
 cask "bitwarden"
 cask "vicinae"
 
+# Window management
 tap "nikitabobko/tap", trusted: {
   cask: "aerospace"
 }
 cask "aerospace"
+
+# Active-window border for AeroSpace
+tap "FelixKratz/formulae"
+brew "borders"

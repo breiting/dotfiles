@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Minimal active-window border.
+# Keep this independent from AeroSpace: borders follows the focused macOS
+# window and therefore works for tiled and floating windows alike.
+
+options=(
+    style=round
+    width=5.0
+    hidpi=on
+    active_color=0xff7aa2f7
+    inactive_color=0x00000000
+)
+
+borders "${options[@]}"

@@ -13,7 +13,6 @@ if ! command -v stow >/dev/null 2>&1; then
     exit 0
 fi
 
-# Shared dotfiles
 stow_package git
 stow_package zsh
 stow_package tmux
@@ -26,9 +25,12 @@ stow_package ghostty
 stow_package nvim
 "$ROOT_DIR/install/neovim-tools.sh"
 
-# macOS-only dotfiles
 if [[ "$(uname -s)" == "Darwin" ]]; then
     stow_package aerospace
+    stow_package borders
+    "$ROOT_DIR/install/macos-defaults.sh"
+    "$ROOT_DIR/install/macos-wallpaper.sh"
+    "$ROOT_DIR/install/borders.sh"
 fi
 
 "$ROOT_DIR/install/scripts.sh"
