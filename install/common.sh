@@ -13,12 +13,20 @@ if ! command -v stow >/dev/null 2>&1; then
     exit 0
 fi
 
+# Shared dotfiles
 stow_package git
 stow_package zsh
 stow_package tmux
+stow_package lazygit
+stow_package ghostty
 
 "$ROOT_DIR/install/tmux-plugins.sh"
 "$ROOT_DIR/install/neovim.sh"
 
 stow_package nvim
 "$ROOT_DIR/install/neovim-tools.sh"
+
+# macOS-only dotfiles
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    stow_package aerospace
+fi

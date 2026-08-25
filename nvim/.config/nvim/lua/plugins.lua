@@ -29,17 +29,7 @@ require("lazy").setup({
         "WhoIsSethDaniel/mason-tool-installer.nvim",
         dependencies = { "mason-org/mason.nvim" },
         opts = {
-            ensure_installed = {
-                "gopls",
-                "json-lsp",
-                "lua-language-server",
-                "neocmakelsp",
-                "prettier",
-                "pyright",
-                "ruff",
-                "shfmt",
-                "typstyle",
-            },
+            ensure_installed = require("mason_tools"),
             run_on_start = false,
         },
     },

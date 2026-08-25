@@ -1,0 +1,28 @@
+# Shared Ghostty configuration for Fedora Linux and macOS.
+
+background-opacity = 0.95
+foreground = bbc2cf
+
+# Keep application chrome minimal; window management belongs to the compositor.
+window-decoration = false
+window-width = 170
+window-height = 42
+
+# Shell integration
+shell-integration-features = no-cursor
+confirm-close-surface = false
+quit-after-last-window-closed = true
+
+# Terminal capabilities
+term = xterm-256color
+
+# Quick terminal
+quick-terminal-position = center
+quick-terminal-screen = main
+
+# macOS
+macos-titlebar-style = hidden
+
+# Keep Option available for macOS text input. AeroSpace owns the global
+# Alt/Option window-management shortcuts outside the terminal.
+macos-option-as-alt = false

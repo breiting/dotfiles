@@ -1,0 +1,7 @@
+gui:
+  timeFormat: "02 Jan 06 15:04 MST"
+  showFileTree: false
+  showRandomTip: false
+  theme:
+    selectedRangeBgColor:
+      - default
