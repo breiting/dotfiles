@@ -1,0 +1,268 @@
+#!/usr/bin/env python3
+"""PDF-Abrechnungen verschiedener Broker einheitlich umbenennen.
+
+Unterstützte Beispiele
+----------------------
+Alter Provider:
+    AT0000730007_INFORMATION_GENERAL_MEETING_2025-02-25.pdf
+      -> 2025-02-25-INFO-AT0000730007.pdf
+
+    CA8672241079_CONFIRMATION_OF_INCOME_REDEMPTION_2025-03-26.pdf
+      -> 2025-03-26-DIVIDENDE-CA8672241079.pdf
+
+Neuer Provider:
+    20260703_Dividendeauslaend.WP_1070037019_615035184.pdf
+      -> 2026-07-03-DIVIDENDE-KYG8167W1380.pdf
+
+    20260702_Kontoauszug_1070037019_605389045.pdf
+      -> 2026-07-02-KONTOAUSZUG.pdf
+
+    _SECURITIES_ACCOUNT_SAFEKEEPING_FEES_2026-07-07.pdf
+      -> 2026-07-07-DEPOTENTGELT.pdf
+
+    _SECURITIES_ACCOUNT_STATEMENT_2026-06-30.pdf
+      -> 2026-06-30-DEPOTAUSZUG.pdf
+
+Die ISIN wird, soweit nötig, mit ``pdftotext`` aus dem PDF-Inhalt gelesen.
+Standardmäßig wird nur eine Vorschau ausgegeben. Erst ``--apply`` benennt um.
+"""
+
+from __future__ import annotations
+
+import argparse
+import re
+import shutil
+import subprocess
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+
+
+ISIN_RE = re.compile(
+    r"(?<![A-Z0-9])([A-Z]{2}[A-Z0-9]{9}[0-9])(?![A-Z0-9])", re.IGNORECASE
+)
+NORMALIZED_RE = re.compile(
+    r"^\d{4}-\d{2}-\d{2}-(?:INFO|DIVIDENDE|KONTOAUSZUG|DEPOTENTGELT|DEPOTAUSZUG)(?:-[A-Z0-9]{12})?\.pdf$",
+    re.IGNORECASE,
+)
+
+OLD_PROVIDER_RE = re.compile(
+    r"^(?P<isin>[A-Z0-9]{12})_"
+    r"(?P<kind>INFORMATION|CONFIRMATION)_"
+    r"[A-Z0-9_.-]+_"
+    r"(?P<date>\d{4}-\d{2}-\d{2})\.pdf$",
+    re.IGNORECASE,
+)
+
+NEW_DIVIDEND_RE = re.compile(
+    r"^(?P<date>\d{8})_Dividende(?:auslaend\.?WP)?_.*\.pdf$",
+    re.IGNORECASE,
+)
+
+NEW_STATEMENT_RE = re.compile(
+    r"^(?P<date>\d{8})_Kontoauszug_.*\.pdf$",
+    re.IGNORECASE,
+)
+
+SAFEKEEPING_RE = re.compile(
+    r"^_?SECURITIES_ACCOUNT_SAFEKEEPING_FEES_(?P<date>\d{4}-\d{2}-\d{2})\.pdf$",
+    re.IGNORECASE,
+)
+
+ACCOUNT_STATEMENT_RE = re.compile(
+    r"^_?SECURITIES_ACCOUNT_STATEMENT_(?P<date>\d{4}-\d{2}-\d{2})\.pdf$",
+    re.IGNORECASE,
+)
+
+
+@dataclass(frozen=True)
+class RenameResult:
+    source: Path
+    target: Path | None
+    reason: str
+
+
+def compact_date(value: str) -> str:
+    """YYYYMMDD in YYYY-MM-DD umwandeln."""
+    return f"{value[0:4]}-{value[4:6]}-{value[6:8]}"
+
+
+def pdf_to_text(path: Path) -> str:
+    """PDF-Text mit pdftotext lesen.
+
+    ``-layout`` erhält die räumliche Struktur etwas besser. Die Ausgabe wird
+    direkt über stdout gelesen, daher entsteht keine temporäre Textdatei.
+    """
+    executable = shutil.which("pdftotext")
+    if executable is None:
+        raise RuntimeError(
+            "pdftotext wurde nicht gefunden. Unter Fedora: "
+            "sudo dnf install poppler-utils"
+        )
+
+    try:
+        completed = subprocess.run(
+            [executable, "-layout", str(path), "-"],
+            check=True,
+            capture_output=True,
+            text=True,
+            errors="replace",
+            timeout=30,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError("Zeitüberschreitung beim Lesen des PDFs") from exc
+    except subprocess.CalledProcessError as exc:
+        message = exc.stderr.strip() or "unbekannter pdftotext-Fehler"
+        raise RuntimeError(message) from exc
+
+    return completed.stdout
+
+
+def extract_isin(path: Path) -> str | None:
+    """Erste plausible ISIN aus dem PDF-Inhalt extrahieren."""
+    text = pdf_to_text(path).upper()
+    match = ISIN_RE.search(text)
+    return match.group(1).upper() if match else None
+
+
+def unique_target(path: Path) -> Path:
+    """Vorhandene Dateien niemals überschreiben.
+
+    Bei einer Kollision werden -02, -03, ... angehängt.
+    """
+    if not path.exists():
+        return path
+
+    for number in range(2, 1000):
+        candidate = path.with_name(f"{path.stem}-{number:02d}{path.suffix}")
+        if not candidate.exists():
+            return candidate
+
+    raise RuntimeError(f"Zu viele Namenskollisionen für {path.name}")
+
+
+def determine_target(path: Path) -> RenameResult:
+    filename = path.name
+
+    if NORMALIZED_RE.fullmatch(filename):
+        return RenameResult(path, None, "bereits im Zielformat")
+
+    match = OLD_PROVIDER_RE.fullmatch(filename)
+    if match:
+        doc_type = (
+            "INFO" if match.group("kind").upper() == "INFORMATION" else "DIVIDENDE"
+        )
+        target = path.with_name(
+            f"{match.group('date')}-{doc_type}-{match.group('isin').upper()}.pdf"
+        )
+        return RenameResult(path, target, "alter Provider")
+
+    match = NEW_DIVIDEND_RE.fullmatch(filename)
+    if match:
+        try:
+            isin = extract_isin(path)
+        except RuntimeError as exc:
+            return RenameResult(path, None, f"PDF konnte nicht gelesen werden: {exc}")
+
+        if not isin:
+            return RenameResult(path, None, "keine ISIN im PDF gefunden")
+
+        date = compact_date(match.group("date"))
+        target = path.with_name(f"{date}-DIVIDENDE-{isin}.pdf")
+        return RenameResult(path, target, "neuer Provider: Dividende")
+
+    match = NEW_STATEMENT_RE.fullmatch(filename)
+    if match:
+        date = compact_date(match.group("date"))
+        target = path.with_name(f"{date}-KONTOAUSZUG.pdf")
+        return RenameResult(path, target, "neuer Provider: Kontoauszug")
+
+    match = SAFEKEEPING_RE.fullmatch(filename)
+    if match:
+        target = path.with_name(f"{match.group('date')}-DEPOTENTGELT.pdf")
+        return RenameResult(path, target, "Depotentgelt")
+
+    match = ACCOUNT_STATEMENT_RE.fullmatch(filename)
+    if match:
+        target = path.with_name(f"{match.group('date')}-DEPOTAUSZUG.pdf")
+        return RenameResult(path, target, "Depotauszug")
+
+    return RenameResult(path, None, "unbekanntes Dateiformat")
+
+
+def rename_pdf_files(directory: Path, apply: bool = False) -> int:
+    renamed = 0
+    skipped = 0
+    errors = 0
+
+    for path in sorted(directory.iterdir()):
+        if not path.is_file() or path.suffix.lower() != ".pdf":
+            continue
+
+        result = determine_target(path)
+        if result.target is None:
+            marker = (
+                "ÜBERSPRUNGEN"
+                if result.reason == "bereits im Zielformat"
+                else "NICHT ERKANNT"
+            )
+            print(f"[{marker}] {path.name} ({result.reason})")
+            skipped += 1
+            continue
+
+        try:
+            target = unique_target(result.target)
+            print(f"[{'UMBENENNEN' if apply else 'VORSCHAU'}] {path.name}")
+            print(f"    -> {target.name} ({result.reason})")
+            if apply:
+                path.rename(target)
+                renamed += 1
+        except OSError as exc:
+            print(f"[FEHLER] {path.name}: {exc}", file=sys.stderr)
+            errors += 1
+
+    if apply:
+        print(
+            f"\nFertig: {renamed} umbenannt, {skipped} übersprungen, {errors} Fehler."
+        )
+    else:
+        print(
+            f"\nNur Vorschau: {skipped} übersprungen, {errors} Fehler. "
+            "Zum Umbenennen erneut mit --apply starten."
+        )
+
+    return 1 if errors else 0
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Broker-PDFs erkennen und einheitlich umbenennen."
+    )
+    parser.add_argument(
+        "directory",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Verzeichnis mit PDF-Dateien (Standard: aktuelles Verzeichnis)",
+    )
+    parser.add_argument(
+        "--apply",
+        action="store_true",
+        help="Umbenennungen tatsächlich durchführen; ohne Option nur Vorschau",
+    )
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    directory = args.directory.expanduser().resolve()
+
+    if not directory.is_dir():
+        print(f"Fehler: Kein Verzeichnis: {directory}", file=sys.stderr)
+        return 2
+
+    return rename_pdf_files(directory, apply=args.apply)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

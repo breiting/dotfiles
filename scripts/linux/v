@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -eq 0 ]]; then
+    printf 'Usage: v FILE...\n' >&2
+    exit 1
+fi
+
+first="${1,,}"
+
+launch() {
+    "$@" >/dev/null 2>&1 &
+    disown
+}
+
+open_fallback() {
+    if command -v xdg-open >/dev/null 2>&1; then
+        launch xdg-open "$1"
+    else
+        printf 'No suitable opener found for %s\n' "$1" >&2
+        exit 127
+    fi
+}
+
+case "$first" in
+    *.png|*.jpg|*.jpeg|*.webp|*.gif|*.bmp|*.tif|*.tiff|*.avif|*.heic)
+        if command -v qimgv >/dev/null 2>&1; then launch qimgv "$@"; else open_fallback "$1"; fi
+        ;;
+    *.pdf)
+        if command -v zathura >/dev/null 2>&1; then launch zathura "$@"; else open_fallback "$1"; fi
+        ;;
+    *.odt|*.ods|*.odp|*.odg|*.doc|*.docx|*.xls|*.xlsx|*.ppt|*.pptx|*.rtf)
+        if command -v libreoffice >/dev/null 2>&1; then launch libreoffice "$@"; else open_fallback "$1"; fi
+        ;;
+    *.txt|*.md|*.json|*.yaml|*.yml|*.toml|*.csv|*.log|*.xml|*.html|*.css|*.js|*.ts|*.lua|*.rs|*.go|*.c|*.cpp|*.h|*.hpp|*.py|*.sh|*.zsh)
+        exec nvim "$@"
+        ;;
+    *)
+        open_fallback "$1"
+        ;;
+esac

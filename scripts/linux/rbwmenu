@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+entry=$(
+  rbw list \
+  | sort -f \
+  | wofi --dmenu \
+      --prompt "Bitwarden" \
+      --matching=fuzzy \
+      --insensitive
+)
+
+[ -z "$entry" ] && exit 0
+
+username=$(rbw get "$entry" --field username 2>/dev/null)
+uri=$(rbw get "$entry" --field uri 2>/dev/null)
+
+menu=$(
+  printf "username: %s\nuri: %s\npassword\ntotp\n" \
+    "$username" "$uri"
+)
+
+action=$(
+  echo "$menu" \
+  | wofi --dmenu --prompt "$entry"
+)
+
+[ -z "$action" ] && exit 0
+
+case "$action" in
+  username:*)
+    printf "%s" "$username" | wl-copy
+    notify-send "Bitwarden" "Username copied"
+    ;;
+
+  uri:*)
+    printf "%s" "$uri" | wl-copy
+    notify-send "Bitwarden" "URI copied"
+    ;;
+
+  password)
+    rbw get "$entry" | wl-copy
+    notify-send "Bitwarden" "Password copied"
+    ;;
+
+  totp)
+    rbw code "$entry" | wl-copy
+    notify-send "Bitwarden" "TOTP copied"
+    ;;
+esac

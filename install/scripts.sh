@@ -8,13 +8,23 @@ BIN_DIR="$HOME/.local/bin"
 
 common_scripts=(
     dn
+    prettier-safe-md
+    stock-rename
 )
 
 linux_scripts=(
+    monitor-hyprland
+    monitor-sway
+    polish-text
+    rbwmenu
+    start-sway
     timer
+    v
 )
 
-macos_scripts=()
+macos_scripts=(
+    zettelsync
+)
 
 link_script() {
     local platform="$1"
@@ -41,8 +51,6 @@ link_script() {
             return 0
         fi
 
-        # After the repository is renamed, links created by this installer can
-        # safely be repaired because they still point at the same scripts tree.
         if [[ ! -e "$target" && "$current" == */scripts/"$platform"/"$name" ]]; then
             ln -sfn "$source" "$target"
             ui_success "$name (relinked)"
@@ -75,20 +83,15 @@ link_group() {
 }
 
 ui_step "Personal scripts"
-
 mkdir -p "$BIN_DIR"
 
 link_group common "${common_scripts[@]}"
 
 case "$(uname -s)" in
     Linux)
-        if (( ${#linux_scripts[@]} > 0 )); then
-            link_group linux "${linux_scripts[@]}"
-        fi
+        (( ${#linux_scripts[@]} > 0 )) && link_group linux "${linux_scripts[@]}"
         ;;
     Darwin)
-        if (( ${#macos_scripts[@]} > 0 )); then
-            link_group macos "${macos_scripts[@]}"
-        fi
+        (( ${#macos_scripts[@]} > 0 )) && link_group macos "${macos_scripts[@]}"
         ;;
 esac

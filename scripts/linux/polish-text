@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+key_file="${OPENAI_KEY_FILE:-$HOME/.openai.key}"
+
+notify() {
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send "OpenAI" "$1"
+    else
+        printf '%s\n' "$1" >&2
+    fi
+}
+
+for tool in curl jq wl-paste wl-copy; do
+    if ! command -v "$tool" >/dev/null 2>&1; then
+        notify "Missing dependency: $tool"
+        exit 127
+    fi
+done
+
+if [[ ! -f "$key_file" ]]; then
+    notify "Key file not found: $key_file"
+    exit 1
+fi
+
+api_key="$(tr -d '[:space:]' < "$key_file")"
+[[ -n "$api_key" ]] || { notify "API key is empty"; exit 1; }
+
+input_text="$(wl-paste)"
+[[ -n "$input_text" ]] || { notify "Clipboard is empty"; exit 1; }
+
+system_prompt='Detect whether the input is German or English. Improve grammar, style, and flow while preserving meaning. Return only the corrected text in the original language, without explanation or formatting.'
+
+notify "Polishing clipboard text..."
+
+response="$(
+    curl --fail --silent --show-error https://api.openai.com/v1/responses \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer $api_key" \
+        -d "$(jq -n \
+            --arg instructions "$system_prompt" \
+            --arg input "$input_text" \
+            '{
+                model: "gpt-5-mini",
+                instructions: $instructions,
+                input: $input
+            }'
+        )"
+)"
+
+result="$(jq -r '.output[]?.content[]? | select(.type == "output_text") | .text' <<<"$response")"
+
+if [[ -z "$result" ]]; then
+    notify "OpenAI returned no text"
+    printf '%s\n' "$response" >&2
+    exit 1
+fi
+
+printf '%s' "$result" | wl-copy
+notify "Polished text copied"

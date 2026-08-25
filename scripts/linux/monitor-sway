@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#
+# Simple monitor control for Sway
+
+mode="${1:-laptop}"
+
+internal="eDP-1"
+external="DP-1"
+
+case "$mode" in
+  laptop)
+    swaymsg output "$internal" enable pos 0 0 scale 1.5
+    swaymsg output "$external" disable
+    ;;
+
+  extend)
+    swaymsg output "$internal" enable pos 0 0 scale 1.5
+    swaymsg output "$external" enable pos 2560 0 scale 1
+    ;;
+
+  mirror)
+    swaymsg output "$internal" enable pos 0 0 scale 1.5
+    swaymsg output "$external" enable pos 0 0 scale 1.5
+    ;;
+
+  external)
+    swaymsg output "$external" enable pos 0 0 scale 1
+    swaymsg output "$internal" disable
+    ;;
+
+  *)
+    echo "usage: monitor.sh {laptop|extend|mirror|external}"
+    exit 1
+    ;;
+esac

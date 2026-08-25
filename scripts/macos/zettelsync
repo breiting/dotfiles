@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source_dir="${ZETTEL_SOURCE:-$HOME/zettel/}"
+target_dir="${ZETTEL_TARGET:-/Volumes/home/ZETTEL/}"
+
+if [[ ! -d "$source_dir" ]]; then
+    printf 'Source directory not found: %s\n' "$source_dir" >&2
+    exit 1
+fi
+
+if [[ ! -d "$target_dir" ]]; then
+    printf 'Target volume/directory not mounted: %s\n' "$target_dir" >&2
+    exit 1
+fi
+
+rsync -ahv --delete "$source_dir" "$target_dir"

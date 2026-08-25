@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+# monitor.sh - einfache Monitor-Steuerung für Hyprland
+#
+# Verwendung:
+#   ./monitor.sh list
+#   ./monitor.sh clone
+#   ./monitor.sh extend
+#   ./monitor.sh internal
+#   ./monitor.sh external
+#
+# Wichtig:
+# Die Monitor-Namen können anders heißen.
+# Prüfe sie zuerst mit:
+#   hyprctl monitors all
+
+INTERNAL="eDP-1"
+EXTERNAL="DP-1"
+
+RESOLUTION="1920x1080@60"
+SCALE="1"
+
+case "$1" in
+
+  list)
+    echo "Erkannte Monitore:"
+    hyprctl monitors all
+    ;;
+
+  clone)
+    echo "Clone/Mirror-Modus aktivieren..."
+    echo "Internes Display:  $INTERNAL"
+    echo "Externer Monitor:  $EXTERNAL"
+
+    # Interner Bildschirm normal
+    hyprctl keyword monitor "$INTERNAL,preferred,0x0,$SCALE"
+
+    # Externer Monitor auf dieselbe Position legen
+    # Dadurch wird der Inhalt gespiegelt
+    hyprctl keyword monitor "$EXTERNAL,$RESOLUTION,0x0,$SCALE"
+    ;;
+
+  extend)
+    echo "Erweiterten Desktop aktivieren..."
+
+    # Laptop links
+    hyprctl keyword monitor "$INTERNAL,preferred,0x0,$SCALE"
+
+    # Externer Monitor rechts daneben
+    hyprctl keyword monitor "$EXTERNAL,$RESOLUTION,1920x0,$SCALE"
+    ;;
+
+  internal)
+    echo "Nur internes Display aktivieren..."
+
+    hyprctl keyword monitor "$EXTERNAL,disable"
+    hyprctl keyword monitor "$INTERNAL,preferred,0x0,$SCALE"
+    ;;
+
+  external)
+    echo "Nur externen Monitor aktivieren..."
+
+    hyprctl keyword monitor "$INTERNAL,disable"
+    hyprctl keyword monitor "$EXTERNAL,$RESOLUTION,0x0,$SCALE"
+    ;;
+
+  *)
+    echo "Verwendung:"
+    echo "  $0 list       # Monitore anzeigen"
+    echo "  $0 clone      # Spiegeln / Klonen"
+    echo "  $0 extend     # Externer Monitor rechts daneben"
+    echo "  $0 internal   # Nur Laptop-Display"
+    echo "  $0 external   # Nur Projektor / externer Monitor"
+    exit 1
+    ;;
+esac
+
