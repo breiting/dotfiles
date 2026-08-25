@@ -1,1 +1,14 @@
-# Fedora packages will be migrated here deliberately from the previous Ansible setup.
+# Minimal Fedora workstation baseline.
+# Keep this list intentionally small. Add packages only when they are
+# required by a dotfile package or by the common workstation workflow.
+
+git
+stow
+zsh
+tmux
+curl
+wget2-wget
+ripgrep
+fd-find
+fzf
+bat

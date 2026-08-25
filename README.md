@@ -29,15 +29,36 @@ Run from the repository root:
 ./bootstrap
 ```
 
-The initial bootstrap intentionally does very little:
+The bootstrap currently:
 
 - identifies Fedora Linux or macOS;
-- verifies the platform-specific bootstrap path;
+- on Fedora, checks a small baseline package list and offers to install only missing packages with DNF;
 - on macOS, detects Homebrew and can install it using the official installer;
 - when Homebrew already exists, shows the installed version and offers to run the official update check;
-- performs no package installation and creates no dotfile symlinks yet.
+- does not create any dotfile symlinks yet.
 
-This gives us a safe baseline that can be tested repeatedly before adding workstation packages or Stow configuration.
+Running the bootstrap again is expected to be safe. On Fedora, already installed packages are detected before DNF is invoked.
+
+## Fedora package baseline
+
+Fedora packages are declared in `packages/fedora.txt` with one package per line. Blank lines and comments are ignored.
+
+The baseline is intentionally small:
+
+```text
+git
+stow
+zsh
+tmux
+curl
+wget
+ripgrep
+fd-find
+fzf
+bat
+```
+
+Additional development tools, desktop packages, third-party repositories, and applications will be added only when we introduce the component that needs them.
 
 ## Repository layout
 
@@ -63,4 +84,4 @@ The bootstrap does not infer that Homebrew is outdated from its local version nu
 
 ## Next steps
 
-The next milestone is to migrate and review the minimal Fedora package baseline from the previous Ansible configuration. Dotfile packages will only be introduced after the package bootstrap is working safely on both Fedora machines.
+The next milestone is to introduce the first deliberately selected Stow package. Package lists will grow alongside the configuration that actually requires them.

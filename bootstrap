@@ -46,4 +46,4 @@ esac
 
 "$ROOT_DIR/install/common.sh"
 
-ui_success "Bootstrap finished. No dotfiles or workstation packages are installed yet."
+ui_success "Bootstrap finished successfully."
