@@ -122,7 +122,6 @@ bindsym $mod+Shift+0 move container to workspace number 10
 
 bindsym $mod+b splith
 bindsym $mod+v splitv
-bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 bindsym $mod+f fullscreen
@@ -161,6 +160,20 @@ for_window [app_id="localsend"] floating enable
 for_window [title="^PRM Photo - .*"] floating enable
 for_window [title="^PIS Photo - .*"] floating enable
 
+# ---------------------
+# German umlauts on US keyboard
+# ---------------------
+
+bindsym $mod+a exec wtype "ä"
+bindsym $mod+o exec wtype "ö"
+bindsym $mod+u exec wtype "ü"
+bindsym $mod+s exec wtype "ß"
+
+bindsym $mod+Shift+a exec wtype "Ä"
+bindsym $mod+Shift+o exec wtype "Ö"
+bindsym $mod+Shift+u exec wtype "Ü"
+
+
 # Workflow helpers -----------------------------------------------------------
 
 bindsym Control+$mod+q exec loginctl lock-session
@@ -176,6 +189,5 @@ bindsym $mod+Shift+comma exec sh -c \
 bindsym $mod+Shift+period exec sh -c \
     'grim -g "$(slurp)" - | wl-copy'
 
-# Note: German umlaut shortcuts previously used Mod1. They are intentionally
-# removed because Alt/Option can now be the Sway modifier on the desktop.
-# Configure Compose/XKB at the keyboard layer instead of the window manager.
+# include '$(/usr/libexec/sway/layered-include "/usr/share/sway/config.d/*.conf" "/etc/sway/config.d/*.conf" "${XDG_CONFIG_HOME:-$HOME/.config}/sway/config.d/*.conf")'
+
