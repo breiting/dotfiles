@@ -2,42 +2,43 @@
 set -Eeuo pipefail
 
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-PACKAGE_FILE="$ROOT_DIR/packages/fedora.txt"
 
 # shellcheck source=install/lib/ui.sh
 source "$ROOT_DIR/install/lib/ui.sh"
 
+PACKAGES_FILE="$ROOT_DIR/packages/fedora.txt"
+
 ui_step "Fedora packages"
 
-if ! command -v dnf >/dev/null 2>&1; then
-    ui_fail "DNF is not available on this Fedora system."
+if [[ ! -f "$PACKAGES_FILE" ]]; then
+    ui_fail "Fedora package list not found: $PACKAGES_FILE"
     exit 1
 fi
 
-if [[ ! -r "$PACKAGE_FILE" ]]; then
-    ui_fail "Package list not found: $PACKAGE_FILE"
-    exit 1
-fi
+packages=()
+missing_packages=()
 
-mapfile -t packages < <(
-    sed -e 's/[[:space:]]*#.*$//' \
-        -e '/^[[:space:]]*$/d' \
-        "$PACKAGE_FILE"
-)
+while IFS= read -r package; do
+    # Strip leading/trailing whitespace and ignore comments/blank lines.
+    package="${package#"${package%%[![:space:]]*}"}"
+    package="${package%"${package##*[![:space:]]}"}"
 
-if ((${#packages[@]} == 0)); then
-    ui_warn "The Fedora package list is empty."
+    [[ -z "$package" || "$package" == \#* ]] && continue
+    packages+=("$package")
+done < "$PACKAGES_FILE"
+
+if (( ${#packages[@]} == 0 )); then
+    ui_warn "Fedora package list is empty."
     exit 0
 fi
 
-missing_packages=()
 for package in "${packages[@]}"; do
     if ! rpm -q "$package" >/dev/null 2>&1; then
         missing_packages+=("$package")
     fi
 done
 
-if ((${#missing_packages[@]} == 0)); then
+if (( ${#missing_packages[@]} == 0 )); then
     ui_success "All ${#packages[@]} Fedora baseline packages are already installed."
     exit 0
 fi
@@ -53,6 +54,13 @@ if ! ui_confirm "Install the missing Fedora packages?"; then
 fi
 
 ui_info "Running DNF. Sudo may ask for your password."
-sudo dnf install -y -- "${missing_packages[@]}"
 
-ui_success "Fedora baseline packages are installed."
+# Fedora 41+ uses DNF5. Do not put the conventional `--` option separator
+# before package specs: DNF5 interprets it as an install-command argument and
+# rejects `dnf install -- package`.
+#
+# Package names come from our version-controlled package list, so no separator
+# is needed here.
+sudo dnf install -y "${missing_packages[@]}"
+
+ui_success "Fedora package installation completed."
