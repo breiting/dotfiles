@@ -24,6 +24,7 @@ stow_package ghostty
 
 stow_package nvim
 "$ROOT_DIR/install/neovim-tools.sh"
+"$ROOT_DIR/install/yazi.sh"
 
 case "$(uname -s)" in
     Darwin)

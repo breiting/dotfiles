@@ -36,5 +36,6 @@ if command -v fzf >/dev/null 2>&1 && fzf --zsh >/dev/null 2>&1; then
 fi
 
 source "$ZDOTDIR/aliases.zsh"
+source "$ZDOTDIR/yazi.zsh"
 source "$ZDOTDIR/fzf.zsh"
 source "$ZDOTDIR/prompt.zsh"

@@ -28,7 +28,6 @@ read -r rx tx < <(
 )
 
 now="$(date +%s)"
-
 prev_time=0
 prev_rx=0
 prev_tx=0
@@ -41,26 +40,28 @@ printf '%s %s %s\n' "$now" "$rx" "$tx" > "$STATE_FILE"
 
 format_rate() {
     local bytes="$1"
+    local value
 
     if (( bytes >= 1048576 )); then
-        awk -v b="$bytes" 'BEGIN { printf "%.1fM", b / 1048576 }'
+        value="$(awk -v b="$bytes" 'BEGIN { printf "%.1fM", b / 1048576 }')"
     elif (( bytes >= 1024 )); then
-        awk -v b="$bytes" 'BEGIN { printf "%.0fK", b / 1024 }'
+        value="$(awk -v b="$bytes" 'BEGIN { printf "%.0fK", b / 1024 }')"
     else
-        printf '%dB' "$bytes"
+        value="${bytes}B"
     fi
+
+    # Fixed width prevents the right side of SketchyBar from shifting as
+    # throughput changes, analogous to Waybar's :>7 formatting.
+    printf '%7s' "$value"
 }
 
 if (( prev_time <= 0 || now <= prev_time || rx < prev_rx || tx < prev_tx )); then
-    down="0B"
-    up="0B"
+    down="$(printf '%7s' '0B')"
+    up="$(printf '%7s' '0B')"
 else
     elapsed=$((now - prev_time))
-    down_bytes=$(((rx - prev_rx) / elapsed))
-    up_bytes=$(((tx - prev_tx) / elapsed))
-
-    down="$(format_rate "$down_bytes")"
-    up="$(format_rate "$up_bytes")"
+    down="$(format_rate $(((rx - prev_rx) / elapsed)))"
+    up="$(format_rate $(((tx - prev_tx) / elapsed)))"
 fi
 
 sketchybar --set "$NAME" \

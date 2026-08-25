@@ -11,6 +11,7 @@ brew "eza"
 brew "starship"
 brew "typst"
 brew "uv"
+brew "yazi"
 
 # Development and Neovim source-build baseline
 brew "cmake"
@@ -36,7 +37,6 @@ tap "nikitabobko/tap", trusted: {
 }
 cask "aerospace"
 
-# FelixKratz desktop tools. Trust only the concrete formulae we use.
 tap "FelixKratz/formulae"
 brew "FelixKratz/formulae/borders", trusted: true
 brew "FelixKratz/formulae/sketchybar", trusted: true
