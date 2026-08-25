@@ -14,7 +14,7 @@ YELLOW=0xfff9e2af
 FONT="JetBrainsMono Nerd Font Propo"
 
 sketchybar --bar \
-    height=30 \
+    height=32 \
     position=top \
     color="$BAR_BG" \
     shadow=off \
