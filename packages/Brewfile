@@ -10,6 +10,7 @@ brew "bat"
 brew "eza"
 brew "starship"
 brew "typst"
+brew "uv"
 
 # Development and Neovim source-build baseline
 brew "cmake"

@@ -30,3 +30,5 @@ stow_package nvim
 if [[ "$(uname -s)" == "Darwin" ]]; then
     stow_package aerospace
 fi
+
+"$ROOT_DIR/install/scripts.sh"

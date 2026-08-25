@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$ROOT_DIR/install/lib/ui.sh"
+
+BIN_DIR="$HOME/.local/bin"
+
+common_scripts=(
+    dn
+)
+
+linux_scripts=(
+    timer
+)
+
+macos_scripts=(
+)
+
+link_script() {
+    local platform="$1"
+    local name="$2"
+    local source="$ROOT_DIR/scripts/$platform/$name"
+    local target="$BIN_DIR/$name"
+    local current=""
+
+    if [[ ! -f "$source" ]]; then
+        ui_fail "Script source not found: $source"
+        return 1
+    fi
+
+    if [[ ! -x "$source" ]]; then
+        ui_fail "Script is not executable: $source"
+        return 1
+    fi
+
+    if [[ -L "$target" ]]; then
+        current="$(readlink "$target")"
+
+        if [[ "$current" == "$source" ]]; then
+            ui_success "$name"
+            return 0
+        fi
+
+        # After the repository is renamed, links created by this installer can
+        # safely be repaired because they still point at the same scripts tree.
+        if [[ ! -e "$target" && "$current" == */scripts/"$platform"/"$name" ]]; then
+            ln -sfn "$source" "$target"
+            ui_success "$name (relinked)"
+            return 0
+        fi
+
+        ui_warn "$name skipped: existing symlink points elsewhere"
+        ui_info "$target -> $current"
+        return 0
+    fi
+
+    if [[ -e "$target" ]]; then
+        ui_warn "$name skipped: existing file is not managed by this repository"
+        ui_info "$target"
+        return 0
+    fi
+
+    ln -s "$source" "$target"
+    ui_success "$name"
+}
+
+ui_step "Personal scripts"
+
+mkdir -p "$BIN_DIR"
+
+for script in "${common_scripts[@]}"; do
+    link_script common "$script"
+done
+
+case "$(uname -s)" in
+    Linux)
+        for script in "${linux_scripts[@]}"; do
+            link_script linux "$script"
+        done
+        ;;
+    Darwin)
+        for script in "${macos_scripts[@]}"; do
+            link_script macos "$script"
+        done
+        ;;
+esac

@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+notes_dir="$HOME/pis/zettel"
+suffix="999"
+date_input="${1:-$(date +%Y-%m-%d)}"
+
+valid_date() {
+    local value="$1"
+
+    if date -d "$value" "+%Y-%m-%d" >/dev/null 2>&1; then
+        return 0
+    fi
+
+    date -j -f "%Y-%m-%d" "$value" "+%Y-%m-%d" >/dev/null 2>&1
+}
+
+if ! valid_date "$date_input"; then
+    printf 'Invalid date: %s\n' "$date_input" >&2
+    exit 1
+fi
+
+id="${date_input}-${suffix}"
+date_file="${notes_dir}/${id}.md"
+
+mkdir -p "$notes_dir"
+
+if [[ ! -f "$date_file" ]]; then
+    cat > "$date_file" <<EOF
+---
+id: $id
+title: Diary $date_input
+tags: [journal]
+date: $date_input
+---
+
+# $date_input
+
+## Notes
+
+-
+
+EOF
+fi
+
+nvim +"normal! G" +"startinsert" "$date_file"

@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+    printf 'Usage: timer <30s|30m|2h|HH:MM> [message]\n' >&2
+    exit 1
+}
+
+[[ $# -ge 1 ]] || usage
+
+when="$1"
+shift
+message="${*:-Timer abgelaufen}"
+
+calculate_seconds() {
+    local input="$1"
+
+    if [[ "$input" =~ ^([0-9]+)(s|m|h)$ ]]; then
+        local number="${BASH_REMATCH[1]}"
+        local unit="${BASH_REMATCH[2]}"
+
+        case "$unit" in
+            s) printf '%s\n' "$number" ;;
+            m) printf '%s\n' "$((number * 60))" ;;
+            h) printf '%s\n' "$((number * 3600))" ;;
+        esac
+        return
+    fi
+
+    if [[ "$input" =~ ^([0-9]{1,2}):([0-9]{2})$ ]]; then
+        local hour="${BASH_REMATCH[1]}"
+        local minute="${BASH_REMATCH[2]}"
+        local now target
+
+        now="$(date +%s)"
+        target="$(date -d "today ${hour}:${minute}" +%s)"
+
+        if (( target <= now )); then
+            target="$(date -d "tomorrow ${hour}:${minute}" +%s)"
+        fi
+
+        printf '%s\n' "$((target - now))"
+        return
+    fi
+
+    usage
+}
+
+seconds="$(calculate_seconds "$when")"
+
+(
+    sleep "$seconds"
+
+    notify-send \
+        --urgency=critical \
+        --expire-time=0 \
+        --app-name="Timer" \
+        "⏰ Timer" \
+        "$message"
+
+    paplay /usr/share/sounds/freedesktop/stereo/complete.oga 2>/dev/null || true
+) >/dev/null 2>&1 & disown
+
+printf 'Timer set: %s — %s\n' "$when" "$message"
