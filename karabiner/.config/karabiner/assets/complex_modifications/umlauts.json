@@ -1,0 +1,179 @@
+{
+  "title": "German Umlauts",
+  "rules": [
+    {
+      "description": "Option+A/O/U/S → ä/ö/ü/ß",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "a",
+            "modifiers": {
+              "mandatory": [
+                "option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "/bin/echo -n 'ä' | LANG=en_US.UTF-8 /usr/bin/pbcopy",
+              "hold_down_milliseconds": 100
+            },
+            {
+              "key_code": "v",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "o",
+            "modifiers": {
+              "mandatory": [
+                "option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "/bin/echo -n 'ö' | LANG=en_US.UTF-8 /usr/bin/pbcopy",
+              "hold_down_milliseconds": 100
+            },
+            {
+              "key_code": "v",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "u",
+            "modifiers": {
+              "mandatory": [
+                "option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "/bin/echo -n 'ü' | LANG=en_US.UTF-8 /usr/bin/pbcopy",
+              "hold_down_milliseconds": 100
+            },
+            {
+              "key_code": "v",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "s",
+            "modifiers": {
+              "mandatory": [
+                "option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "/bin/echo -n 'ß' | LANG=en_US.UTF-8 /usr/bin/pbcopy",
+              "hold_down_milliseconds": 100
+            },
+            {
+              "key_code": "v",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Option+Shift+A/O/U → Ä/Ö/Ü",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "a",
+            "modifiers": {
+              "mandatory": [
+                "option",
+                "shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "/bin/echo -n 'Ä' | LANG=en_US.UTF-8 /usr/bin/pbcopy",
+              "hold_down_milliseconds": 100
+            },
+            {
+              "key_code": "v",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "o",
+            "modifiers": {
+              "mandatory": [
+                "option",
+                "shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "/bin/echo -n 'Ö' | LANG=en_US.UTF-8 /usr/bin/pbcopy",
+              "hold_down_milliseconds": 100
+            },
+            {
+              "key_code": "v",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "u",
+            "modifiers": {
+              "mandatory": [
+                "option",
+                "shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "/bin/echo -n 'Ü' | LANG=en_US.UTF-8 /usr/bin/pbcopy",
+              "hold_down_milliseconds": 100
+            },
+            {
+              "key_code": "v",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

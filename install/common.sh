@@ -32,6 +32,10 @@ case "$(uname -s)" in
         stow_package borders
         stow_package sketchybar
 
+        # Karabiner owns the surrounding directory. Only umlauts.json is
+        # symlinked into assets/complex_modifications.
+        stow_package_no_folding karabiner
+
         "$ROOT_DIR/install/aerospace-sketchybar.sh"
         "$ROOT_DIR/install/macos-defaults.sh"
         "$ROOT_DIR/install/borders.sh"
