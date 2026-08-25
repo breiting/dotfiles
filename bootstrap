@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=install/lib/ui.sh
+source "$ROOT_DIR/install/lib/ui.sh"
+
+on_error() {
+    local exit_code=$?
+    ui_fail "Bootstrap stopped unexpectedly (exit code ${exit_code})."
+    exit "$exit_code"
+}
+trap on_error ERR
+
+ui_banner "Dotfiles Bootstrap" "Small, safe workstation setup for Fedora and macOS"
+ui_info "Repository: $ROOT_DIR"
+
+case "$(uname -s)" in
+    Darwin)
+        ui_step "Detected macOS"
+        "$ROOT_DIR/install/macos.sh"
+        ;;
+    Linux)
+        if [[ -r /etc/os-release ]]; then
+            # shellcheck disable=SC1091
+            source /etc/os-release
+        else
+            ui_fail "Cannot identify this Linux distribution (/etc/os-release is missing)."
+            exit 1
+        fi
+
+        if [[ "${ID:-}" != "fedora" ]]; then
+            ui_fail "Unsupported Linux distribution: ${PRETTY_NAME:-unknown}"
+            exit 1
+        fi
+
+        ui_step "Detected ${PRETTY_NAME:-Fedora Linux}"
+        "$ROOT_DIR/install/fedora.sh"
+        ;;
+    *)
+        ui_fail "Unsupported operating system: $(uname -s)"
+        exit 1
+        ;;
+esac
+
+"$ROOT_DIR/install/common.sh"
+
+ui_success "Bootstrap finished. No dotfiles or workstation packages are installed yet."
