@@ -24,5 +24,7 @@ cask "bitwarden"
 cask "maccy"
 
 # AeroSpace is distributed from its official Homebrew tap.
-tap "nikitabobko/tap"
+tap "nikitabobko/tap", trusted: {
+  cask: "aerospace"
+}
 cask "aerospace"
