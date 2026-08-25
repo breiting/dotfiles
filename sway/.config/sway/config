@@ -44,6 +44,7 @@ input type:keyboard {
 input type:pointer {
     accel_profile flat
     pointer_accel -0.2
+    natural_scroll enabled
 }
 
 # Session services -----------------------------------------------------------
