@@ -25,15 +25,26 @@ stow_package ghostty
 stow_package nvim
 "$ROOT_DIR/install/neovim-tools.sh"
 
-if [[ "$(uname -s)" == "Darwin" ]]; then
-    stow_package aerospace
-    stow_package borders
-    stow_package sketchybar
+case "$(uname -s)" in
+    Darwin)
+        stow_package aerospace
+        stow_package borders
+        stow_package sketchybar
 
-    "$ROOT_DIR/install/aerospace-sketchybar.sh"
-    "$ROOT_DIR/install/macos-defaults.sh"
-    "$ROOT_DIR/install/borders.sh"
-    "$ROOT_DIR/install/sketchybar.sh"
-fi
+        "$ROOT_DIR/install/aerospace-sketchybar.sh"
+        "$ROOT_DIR/install/macos-defaults.sh"
+        "$ROOT_DIR/install/borders.sh"
+        "$ROOT_DIR/install/sketchybar.sh"
+        ;;
+    Linux)
+        stow_package sway
+        stow_package swaync
+        stow_package waybar
+        stow_package wireplumber
+        stow_package wofi
+
+        "$ROOT_DIR/install/sway-host.sh"
+        ;;
+esac
 
 "$ROOT_DIR/install/scripts.sh"

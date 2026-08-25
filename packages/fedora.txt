@@ -23,5 +23,18 @@ ninja-build
 gettext
 glibc-gconv-extra
 
-# Neovim runtime tooling available as native Fedora packages
+# Neovim runtime tooling
 tree-sitter-cli
+
+# Sway desktop
+sway
+waybar
+SwayNotificationCenter
+wofi
+wireplumber
+wl-clipboard
+cliphist
+grim
+slurp
+wtype
+pavucontrol

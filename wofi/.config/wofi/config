@@ -1,0 +1,8 @@
+width=600
+height=360
+show=drun
+prompt=run
+normal_window=true
+allow_images=true
+insensitive=true
+term=ghostty
