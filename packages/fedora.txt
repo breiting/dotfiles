@@ -1,13 +1,12 @@
-# Minimal Fedora workstation baseline.
-# Keep this list intentionally small. Add packages only when they are
-# required by a dotfile package or by the common workstation workflow.
-
+# Core workstation tools
 git
 stow
 zsh
 tmux
 curl
 wget2-wget
+
+# Terminal utilities
 ripgrep
 fd-find
 fzf
