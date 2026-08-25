@@ -32,12 +32,12 @@
   },
 
   "network": {
-    "format-wifi": "  {essid}",
-    "format-ethernet": "󰈀  {ifname}",
+    "format-wifi": "  {essid} ↓ {bandwidthDownBytes:>7}  ↑ {bandwidthUpBytes:>7}",
+    "format-ethernet": "󰈀  ↓ {bandwidthDownBytes:>7}  ↑ {bandwidthUpBytes:>7}",
     "format-disconnected": "󰖪  offline",
-    "tooltip-format-wifi": "{ifname}\n{ipaddr}\n↓ {bandwidthDownBytes}  ↑ {bandwidthUpBytes}",
-    "tooltip-format-ethernet": "{ifname}\n{ipaddr}\n↓ {bandwidthDownBytes}  ↑ {bandwidthUpBytes}",
-    "interval": 3,
+    "tooltip-format-wifi": "{essid}\n{ifname}  {ipaddr}\n↓ {bandwidthDownBytes:>7}  ↑ {bandwidthUpBytes:>7}",
+    "tooltip-format-ethernet": "{ifname}  {ipaddr}\n↓ {bandwidthDownBytes:>7}  ↑ {bandwidthUpBytes:>7}",
+    "interval": 2,
   },
 
   "pulseaudio": {
