@@ -41,6 +41,7 @@ defaults write com.apple.dock mru-spaces -bool false
 # Menu bar -------------------------------------------------------------------
 # Hide Apple's menu bar; SketchyBar will become the visible status surface.
 defaults write NSGlobalDomain _HIHideMenuBar -bool true
+defaults write NSGlobalDomain AppleEnableMenuBarTransparency -bool false
 
 # Finder ---------------------------------------------------------------------
 defaults write com.apple.finder DisableAllAnimations -bool true
@@ -58,8 +59,8 @@ defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
 
 # Screenshots ----------------------------------------------------------------
-mkdir -p "$HOME/Pictures/Screenshots"
-defaults write com.apple.screencapture location -string "$HOME/Pictures/Screenshots"
+mkdir -p "$HOME/Screenshots"
+defaults write com.apple.screencapture location -string "$HOME/Screenshots"
 defaults write com.apple.screencapture disable-shadow -bool true
 
 # Apply processes that safely reload in-session.

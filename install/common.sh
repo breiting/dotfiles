@@ -32,7 +32,6 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
 
     "$ROOT_DIR/install/aerospace-sketchybar.sh"
     "$ROOT_DIR/install/macos-defaults.sh"
-    "$ROOT_DIR/install/macos-wallpaper.sh"
     "$ROOT_DIR/install/borders.sh"
     "$ROOT_DIR/install/sketchybar.sh"
 fi
