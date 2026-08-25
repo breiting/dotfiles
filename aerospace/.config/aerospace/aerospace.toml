@@ -25,6 +25,10 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 automatically-unhide-macos-hidden-apps = true
 
+
+# Notify SketchyBar immediately when the AeroSpace workspace changes.
+exec-on-workspace-change = ['/bin/bash', '-c', 'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE']
+
 [key-mapping]
 preset = 'qwerty'
 
