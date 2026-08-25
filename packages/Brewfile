@@ -28,6 +28,7 @@ cask "karabiner-elements"
 cask "hammerspoon"
 cask "bitwarden"
 cask "vicinae"
+cask "font-jetbrains-mono-nerd-font"
 
 # Window management
 tap "nikitabobko/tap", trusted: {
@@ -35,8 +36,7 @@ tap "nikitabobko/tap", trusted: {
 }
 cask "aerospace"
 
-# Active-window border for AeroSpace
-tap "FelixKratz/formulae", trusted: {
-  formula: "borders"
-}
-brew "borders"
+# FelixKratz desktop tools. Trust only the concrete formulae we use.
+tap "FelixKratz/formulae"
+brew "FelixKratz/formulae/borders", trusted: true
+brew "FelixKratz/formulae/sketchybar", trusted: true
