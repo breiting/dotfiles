@@ -19,3 +19,5 @@ fi
 stow_package git
 stow_package zsh
 stow_package tmux
+
+"$ROOT_DIR/install/tmux-plugins.sh"

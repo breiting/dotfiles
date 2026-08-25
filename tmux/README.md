@@ -2,66 +2,64 @@
 
 Shared tmux configuration for Fedora Linux and macOS.
 
-## Current scope
-
-The configuration is deliberately plugin-free.
-
-It keeps the useful parts of the previous setup:
-
-- `C-a` as the prefix;
-- windows and panes starting at `1`;
-- automatic window renumbering;
-- mouse support;
-- a larger history buffer;
-- hyperlink and RGB terminal capabilities;
-- passthrough support;
-- configuration reload with `<prefix> r`;
-- clipboard integration when `pbcopy` or `wl-copy` is available.
-
-## Clipboard
-
-The same configuration is used on both platforms.
-
-On macOS, copy mode uses `pbcopy`.
-
-On Wayland systems, copy mode uses `wl-copy` when it is installed. If neither
-command exists, tmux simply keeps its normal internal copy buffer behaviour.
-
-`wl-clipboard` is intentionally not added to the Fedora baseline yet. It should
-only become a package dependency if clipboard integration is actually wanted
-on the Fedora machines.
-
 ## Plugins
 
-The legacy configuration used:
+tmux plugins are managed by TPM, but TPM is installed by the workstation
+bootstrap rather than cloning repositories from inside `tmux.conf`.
 
-- TPM;
-- vim-tmux-navigator;
-- Dracula;
-- tmux-sensible;
-- tmux-yank.
+Current plugins:
 
-None of them are migrated yet.
+- `tmux-plugins/tpm`
+- `christoomey/vim-tmux-navigator`
 
-The new configuration should first prove useful without a plugin manager.
-`vim-tmux-navigator` can be reconsidered together with the Neovim configuration,
-because that integration spans both tools.
+The bootstrap:
+
+1. activates the tmux Stow package;
+2. checks whether TPM exists below `~/.config/tmux/plugins/tpm`;
+3. offers to clone TPM when missing;
+4. runs TPM's command-line `install_plugins` helper.
+
+This means shell or tmux startup does not perform network installations.
+
+TPM can still be used interactively:
+
+```text
+<prefix> I       install newly declared plugins
+<prefix> U       update plugins
+<prefix> Alt-u   remove plugins no longer declared
+```
+
+With this configuration the prefix is `C-a`.
+
+## vim-tmux-navigator
+
+The tmux side is installed now because pane/split navigation is part of the
+daily tmux workflow.
+
+The corresponding Neovim plugin will be added when the Neovim configuration is
+migrated. Until then the tmux plugin still handles navigation between tmux
+panes; seamless movement through Neovim splits requires the Neovim side too.
+
+Default navigation:
+
+```text
+Ctrl-h  left
+Ctrl-j  down
+Ctrl-k  up
+Ctrl-l  right
+Ctrl-\  previous
+```
 
 ## Migration
 
-Inspect and remove the old Stow links first:
+After migrating the tmux Stow package, rerun:
 
 ```sh
-stow --dir ~/workspace/dotfiles --target "$HOME" --delete --simulate --verbose=1 tmux
-stow --dir ~/workspace/dotfiles --target "$HOME" --delete tmux
-```
-
-Then activate the package from the new repository:
-
-```sh
-cd ~/workspace/dotfiles-ng
 ./bootstrap
 ```
 
-Existing tmux servers do not automatically reread the new configuration. Start
-a new server or reload it with `<prefix> r`.
+and accept TPM installation. Existing tmux servers can then reload with:
+
+```text
+C-a r
+```
