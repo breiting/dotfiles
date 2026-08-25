@@ -21,3 +21,4 @@ stow_package tmux
 "$ROOT_DIR/install/neovim.sh"
 
 stow_package nvim
+"$ROOT_DIR/install/neovim-tools.sh"

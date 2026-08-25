@@ -21,3 +21,6 @@ cmake
 ninja-build
 gettext
 glibc-gconv-extra
+
+# Neovim runtime tooling available as native Fedora packages
+tree-sitter-cli

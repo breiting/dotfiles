@@ -17,6 +17,10 @@ brew "ninja"
 brew "gettext"
 brew "pkgconf"
 
+# Neovim runtime tooling managed at workstation level on macOS
+brew "tree-sitter-cli"
+brew "pyright"
+
 # macOS applications
 cask "ghostty"
 cask "karabiner-elements"
@@ -24,7 +28,6 @@ cask "hammerspoon"
 cask "bitwarden"
 cask "maccy"
 
-# AeroSpace is distributed from its official Homebrew tap.
 tap "nikitabobko/tap", trusted: {
   cask: "aerospace"
 }
