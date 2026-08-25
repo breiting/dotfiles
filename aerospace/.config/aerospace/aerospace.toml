@@ -18,7 +18,7 @@ accordion-padding = 0
 persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
 # Match the focus-follows-mouse feel used on Hyprland.
-focus-follows-mouse.enabled = true
+focus-follows-mouse.enabled = false
 
 # Move the pointer only when keyboard focus crosses monitors.
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
@@ -158,6 +158,10 @@ run = 'move-node-to-workspace 9'
 [[on-window-detected]]
 if.app-id = 'org.mozilla.thunderbird'
 run = 'move-node-to-workspace 8'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = 'layout floating'
 
 # Generic utility/dialog-style windows can opt into floating by title.
 [[on-window-detected]]

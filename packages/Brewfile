@@ -36,5 +36,7 @@ tap "nikitabobko/tap", trusted: {
 cask "aerospace"
 
 # Active-window border for AeroSpace
-tap "FelixKratz/formulae"
+tap "FelixKratz/formulae", trusted: {
+  formula: "borders"
+}
 brew "borders"

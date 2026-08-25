@@ -15,9 +15,8 @@ fi
 
 # Keyboard -------------------------------------------------------------------
 # Lower values are faster. These are deliberately aggressive but still usable.
-defaults write NSGlobalDomain KeyRepeat -int 1
-defaults write NSGlobalDomain InitialKeyRepeat -int 10
-defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
 
 # Dock -----------------------------------------------------------------------
 # Keep the Dock available as an escape hatch, but empty and hidden.
