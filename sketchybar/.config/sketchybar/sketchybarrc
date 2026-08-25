@@ -4,16 +4,12 @@ set -u
 CONFIG_DIR="${CONFIG_DIR:-$HOME/.config/sketchybar}"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
-# Palette: intentionally close to the old Waybar/Tokyo Night feel.
 BAR_BG=0xff111111
 ITEM_BG=0xff222222
-ITEM_ACTIVE=0xff444444
 FG=0xffdddddd
-DIM=0xff888888
 BLUE=0xff89b4fa
 GREEN=0xffa6e3a1
 YELLOW=0xfff9e2af
-RED=0xfff38ba8
 
 FONT="JetBrainsMono Nerd Font Propo"
 
@@ -49,9 +45,9 @@ sketchybar --default \
     label.padding_left=3 \
     label.padding_right=6
 
-# AeroSpace workspaces --------------------------------------------------------
-
 sketchybar --add event aerospace_workspace_change
+
+# Left side -------------------------------------------------------------------
 
 for sid in 1 2 3 4 5 6 7 8 9 0; do
     sketchybar \
@@ -65,32 +61,42 @@ for sid in 1 2 3 4 5 6 7 8 9 0; do
         --subscribe "space.$sid" aerospace_workspace_change
 done
 
-# Current application ---------------------------------------------------------
-
+# Keep app context next to the workspaces instead of in the notched center.
 sketchybar \
-    --add item front_app center \
+    --add item front_app left \
     --set front_app \
         icon="󰘔" \
         background.drawing=off \
-        label.max_chars=55 \
+        label.max_chars=45 \
         script="$PLUGIN_DIR/front_app.sh" \
     --subscribe front_app front_app_switched
 
-# Right-side status -----------------------------------------------------------
+# Right side ------------------------------------------------------------------
 
 sketchybar \
-    --add item cpu right \
-    --set cpu \
-        icon="" \
-        update_freq=3 \
-        script="$PLUGIN_DIR/cpu.sh"
+    --add item clock right \
+    --set clock \
+        icon="" \
+        icon.color="$BLUE" \
+        update_freq=30 \
+        click_script='open "x-apple.systempreferences:com.apple.Date-Time-Settings.extension"' \
+        script="$PLUGIN_DIR/clock.sh"
+
+sketchybar \
+    --add item battery right \
+    --set battery \
+        icon="" \
+        icon.color="$YELLOW" \
+        update_freq=30 \
+        click_script='open "x-apple.systempreferences:com.apple.Battery-Settings.extension"' \
+        script="$PLUGIN_DIR/battery.sh"
 
 sketchybar \
     --add item volume right \
     --set volume \
         icon="" \
+        click_script='open "x-apple.systempreferences:com.apple.Sound-Settings.extension"' \
         script="$PLUGIN_DIR/volume.sh" \
-        scroll_texts=off \
     --subscribe volume volume_change
 
 sketchybar \
@@ -99,28 +105,20 @@ sketchybar \
         icon="" \
         icon.color="$GREEN" \
         update_freq=5 \
+        click_script='open "x-apple.systempreferences:com.apple.wifi-settings-extension"' \
         script="$PLUGIN_DIR/network.sh"
 
 sketchybar \
-    --add item battery right \
-    --set battery \
-        icon="" \
-        icon.color="$YELLOW" \
-        update_freq=30 \
-        script="$PLUGIN_DIR/battery.sh"
+    --add item cpu right \
+    --set cpu \
+        icon="" \
+        update_freq=3 \
+        click_script='open -a "Activity Monitor"' \
+        script="$PLUGIN_DIR/cpu.sh"
 
-sketchybar \
-    --add item clock right \
-    --set clock \
-        icon="" \
-        icon.color="$BLUE" \
-        update_freq=30 \
-        script="$PLUGIN_DIR/clock.sh"
 
-# Initialize every item once.
 sketchybar --update
 
-# AeroSpace does not emit an event until the first workspace switch.
 focused="$(aerospace list-workspaces --focused 2>/dev/null | head -n 1 || true)"
 if [[ -n "$focused" ]]; then
     sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE="$focused"
