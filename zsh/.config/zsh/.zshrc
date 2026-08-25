@@ -3,6 +3,9 @@
 # Runtime directories are intentionally not stored in the dotfiles repository.
 mkdir -p "$XDG_STATE_HOME/zsh" "$XDG_CACHE_HOME/zsh"
 
+# Environment
+source "$ZDOTDIR/env.zsh"
+
 # History
 HISTFILE="$XDG_STATE_HOME/zsh/history"
 HISTSIZE=100000

@@ -21,6 +21,34 @@ The bootstrap currently:
 - safely offers to activate the `git` and `zsh` Stow packages;
 - never adopts or overwrites an existing file or symlink from another dotfiles repository.
 
+## Zsh startup layout
+
+Zsh uses a deliberately simple startup chain:
+
+```text
+~/.zshenv
+    |
+    +-- XDG_CONFIG_HOME
+    +-- XDG_CACHE_HOME
+    +-- XDG_DATA_HOME
+    +-- XDG_STATE_HOME
+    +-- ZDOTDIR
+          |
+          v
+~/.config/zsh/.zshrc
+          |
+          +-- env.zsh
+          +-- aliases.zsh
+          +-- fzf.zsh
+          +-- prompt.zsh
+```
+
+There is intentionally no second `.zshenv` below `ZDOTDIR`.
+
+The root `~/.zshenv` only establishes the XDG environment and points Zsh at `~/.config/zsh`. Interactive environment settings such as PATH, editor, Homebrew paths, Starship configuration, and GPG terminal handling live in `env.zsh`.
+
+Generated runtime files such as `zcompdump` and shell history are written below the XDG cache/state directories and are not stored in Git.
+
 ## Dotfile migration
 
 Packages are migrated one at a time. During the transition from an older repository, a Stow conflict is expected and is treated as a safe skip.
@@ -36,62 +64,3 @@ cd ~/workspace/dotfiles-ng
 ```
 
 The old repository can be re-stowed at any time to roll back.
-
-## Zsh
-
-The Zsh setup intentionally starts smaller than the legacy configuration.
-
-It keeps:
-
-- `ZDOTDIR=~/.config/zsh`;
-- XDG base directories;
-- history and completion;
-- fzf integration;
-- a small set of aliases;
-- Starship.
-
-It deliberately does not migrate yet:
-
-- generated `.zcompdump` files;
-- Android, Flutter, Processing, Go, or other project-specific environment variables;
-- `LD_LIBRARY_PATH`;
-- shell plugins that clone themselves during shell startup;
-- the legacy `.git-completion.zsh`.
-
-These can be reintroduced individually when there is a concrete need.
-
-On macOS, the bootstrap uses Apple's `/bin/zsh` instead of installing a second Homebrew Zsh.
-
-## macOS Brewfile baseline
-
-The first macOS baseline includes CLI tools required by the shell and everyday workstation use, plus:
-
-- Ghostty
-- Karabiner-Elements
-- Hammerspoon
-- Bitwarden
-- Maccy
-- AeroSpace
-
-Larger or more specialized applications such as Docker, UTM, GIMP, Signal, VLC, SketchyBar, JankyBorders, Vicinae, and the source-built Neovim setup are intentionally deferred.
-
-## Repository layout
-
-```text
-.
-├── bootstrap
-├── git/
-├── zsh/
-├── install/
-│   ├── common.sh
-│   ├── fedora.sh
-│   ├── macos.sh
-│   └── lib/
-│       ├── stow.sh
-│       └── ui.sh
-├── macos/
-│   └── defaults.sh
-└── packages/
-    ├── Brewfile
-    └── fedora.txt
-```
