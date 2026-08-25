@@ -21,3 +21,4 @@ stow_package zsh
 stow_package tmux
 
 "$ROOT_DIR/install/tmux-plugins.sh"
+"$ROOT_DIR/install/neovim.sh"

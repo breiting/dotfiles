@@ -13,3 +13,11 @@ fzf
 bat
 eza
 starship
+
+# Neovim source-build toolchain
+gcc
+make
+cmake
+ninja-build
+gettext
+glibc-gconv-extra

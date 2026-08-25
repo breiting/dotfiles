@@ -11,9 +11,10 @@ brew "eza"
 brew "starship"
 brew "typst"
 
-# Development baseline
+# Development and Neovim source-build baseline
 brew "cmake"
 brew "ninja"
+brew "gettext"
 brew "pkgconf"
 
 # macOS applications
